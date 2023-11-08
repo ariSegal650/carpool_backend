@@ -1,0 +1,25 @@
+.form{
+    display: grid;
+    justify-items: center;
+}
+.styleA{
+    margin: 7px 0;
+    display: grid;
+    align-items: center;
+    justify-content: space-between;
+    border: black 0.5 solid;
+    border-radius: 7px;
+    padding-right: 5px;
+    grid-template-columns: 2fr 1fr;
+     justify-items: end;
+}
+.image{
+    display: flex;
+}
+.required{
+    color: red;
+}
+h4{
+    justify-self: center;
+    text-align: center;
+}

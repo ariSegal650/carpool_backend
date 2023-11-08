@@ -1,6 +1,5 @@
 ﻿
-using LogicService.Data;
-using LogicService.EO;
+using LogicService.Dto;
 using LogicService.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,17 +10,35 @@ namespace backend.Controllers
     public class OrganizationController : ControllerBase
     {
         private readonly OrganizationService _OrganizationService;
-        public OrganizationController(OrganizationService dB)
+        private readonly VerificationService _VerificationService;
+
+        public OrganizationController(OrganizationService dB, VerificationService verificationService)
         {
             _OrganizationService = dB;
+            _VerificationService = verificationService;
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> CreateOrganization([FromBody] OrganizationInfoEO org)
+        public async Task<IActionResult> CreateOrganization([FromBody] OrganizationDto org)
         {
             var status = await _OrganizationService.CreateOrganization(org);
             return status ? Ok() : BadRequest();
         }
+
+        [HttpPost("test")]
+        public IActionResult test()
+        {
+            var result = _VerificationService.GetSmsVerification();
+            return result.sucsses ? Ok(result) : BadRequest(result);
+        }
+        [HttpPost("check")]
+        public IActionResult check(string code)
+        {
+            _VerificationService.CheckSms(code);
+            return Ok();
+        }
+
     }
 }
+

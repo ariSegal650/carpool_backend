@@ -8,13 +8,13 @@ namespace LogicService.Dto
 {
     public class ErrorResponse
     {
-        public ErrorResponse(bool sucsses, string errorText)
+        public ErrorResponse(bool sucsses, string? errorText)
         {
             this.sucsses = sucsses;
-            this.errorText = errorText;
+            this.errorText = errorText ??"";
         }
 
         public bool sucsses { get; set; }
-        public string errorText { get; set; } = string.Empty;
+        public string? errorText { get; set; } = string.Empty;
     }
 }

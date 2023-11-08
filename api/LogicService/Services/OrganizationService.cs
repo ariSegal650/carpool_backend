@@ -1,6 +1,7 @@
 ﻿
 
 using LogicService.Data;
+using LogicService.Dto;
 using LogicService.EO;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -14,11 +15,11 @@ namespace LogicService.Services
         {
             _DataContexst = dataContexst;
         }
-        public async Task<bool> CreateOrganization(OrganizationInfoEO org)
+        public async Task<bool> CreateOrganization(OrganizationDto org)
         {
             try
             {
-             await _DataContexst._Organization.InsertOneAsync(org);
+             await _DataContexst._Organization.InsertOneAsync(org.convertToEo());
                 return true;
             }
             catch (Exception e)
