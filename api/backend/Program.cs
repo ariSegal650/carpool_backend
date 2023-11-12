@@ -9,7 +9,7 @@ builder.Services.AddSingleton<DataContexst>();
 builder.Services.AddScoped<OrganizationService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<VerificationService>();
-
+builder.Services.AddScoped<TokenService>();
 
 // Add services to the container.
 

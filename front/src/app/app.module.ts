@@ -11,12 +11,18 @@ import { InputTextModule } from 'primeng/inputtext';
 import { HttpClientModule } from '@angular/common/http';
 import { NewOrganizationComponent } from './components/new-organization/new-organization.component';
 import { FileUploadModule } from 'primeng/fileupload';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { VerificationComponent } from './components/verification/verification.component';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [
     AppComponent,
     RequstComponent,
     NewOrganizationComponent,
+    VerificationComponent,
     
   ],
   imports: [
@@ -28,10 +34,13 @@ import { FileUploadModule } from 'primeng/fileupload';
     DropdownModule,
     InputTextModule,
     HttpClientModule,
-    FileUploadModule
+    FileUploadModule,
+    ToastModule,
+    FormsModule,
+    ButtonModule
     
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -10,35 +10,23 @@ namespace backend.Controllers
     public class OrganizationController : ControllerBase
     {
         private readonly OrganizationService _OrganizationService;
-        private readonly VerificationService _VerificationService;
 
-        public OrganizationController(OrganizationService dB, VerificationService verificationService)
+        public OrganizationController(OrganizationService dB )
         {
             _OrganizationService = dB;
-            _VerificationService = verificationService;
+           
         }
 
 
         [HttpPost]
         public async Task<IActionResult> CreateOrganization([FromBody] OrganizationDto org)
         {
-            var status = await _OrganizationService.CreateOrganization(org);
-            return status ? Ok() : BadRequest();
-        }
+            var response = await _OrganizationService.CreateOrganization(org);
 
-        [HttpPost("test")]
-        public IActionResult test()
-        {
-            var result = _VerificationService.GetSmsVerification();
-            return result.sucsses ? Ok(result) : BadRequest(result);
+            if (response == null)
+                return BadRequest("somthing worng");
+            return Ok(response);
         }
-        [HttpPost("check")]
-        public IActionResult check(string code)
-        {
-            _VerificationService.CheckSms(code);
-            return Ok();
-        }
-
     }
 }
 

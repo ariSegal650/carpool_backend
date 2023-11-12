@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { RequestOrg } from '../models/request';
 import { HttpClient } from '@angular/common/http';
 import { OrganizationInfoDto } from '../models/organization';
+import { Observable } from 'rxjs';
+import { VerificationDto } from '../models/Verification';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +16,10 @@ export class DataService {
   SendRequest(request: RequestOrg) {
     this.BasikPostRequst("post", "User", request);
   }
-  CreateNewOrganization(org: OrganizationInfoDto) {
 
-    this.BasikPostRequst("post", "Organization", org);
+  CreateNewOrganization(org: OrganizationInfoDto):Observable<any> {
+
+   return this.http.post(this.baseUrl+"Organization",org);
   }
 
   BasikPostRequst(requestType, url, body) {
@@ -29,4 +32,7 @@ export class DataService {
       },
     })
   }
+
+ 
+
 }

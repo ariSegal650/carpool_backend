@@ -11,23 +11,29 @@ namespace LogicService.Services
     public class OrganizationService
     {
         private readonly DataContexst _DataContexst;
-        public OrganizationService(DataContexst dataContexst)
+        private readonly TokenService _tokenService;
+        public OrganizationService(DataContexst dataContexst, TokenService tokenService)
         {
             _DataContexst = dataContexst;
+            _tokenService = tokenService;
         }
-        public async Task<bool> CreateOrganization(OrganizationDto org)
+        public async Task<OrgResponseDto?> CreateOrganization(OrganizationDto org)
         {
             try
             {
              await _DataContexst._Organization.InsertOneAsync(org.convertToEo());
-                return true;
+
+                return new OrgResponseDto
+                {
+                    Id = org.Id ?? "",
+                    Token = _tokenService.CreateToken(org)
+                };
             }
             catch (Exception e)
             {
               await Console.Out.WriteLineAsync("OrganizationService"+e);
-                return false;
+                return null;
             }
-           
         }
 
         public async Task<List<OrganizationInfoEO>> GetAsync()

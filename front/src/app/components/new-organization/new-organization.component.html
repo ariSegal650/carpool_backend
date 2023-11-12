@@ -1,4 +1,4 @@
-<div class="form">
+<div class="form" *ngIf="!FormFiled">
     <form [formGroup]="organizationForm" (ngSubmit)="onSubmit()" style="display: grid;">
 
         <h1>טופס רישום עמותות/ ארגונים</h1>
@@ -9,10 +9,12 @@
         </div>
 
         <div class="styleA Image">
-            <p-fileUpload mode="basic" name="demo[]" accept="image/*" [maxFileSize]="1000000"
-                (onSelect)="onBasicUploadAuto($event)" [auto]="true"
+
+            <p-fileUpload #fileUpload mode="basic" id="image" name="demo[]" accept="image/*" [maxFileSize]="1000000"
+                (onSelect)="onUploadImage($event)" [auto]="true"
                 invalidFileTypeMessageSummary="מותרת העלת קובץ תמונה בלבד" chooseLabel="בחר תמונת לוגו">
             </p-fileUpload>
+
             <label for="name"> :תמונת לוגו </label>
 
             <img *ngIf="imageToShow" [src]="imageToShow" alt="Selected Image"
@@ -58,6 +60,7 @@
             <div
                 *ngIf=" organizationForm.get('Phone')?.touched && organizationForm.get('Phone')?.errors?.['israeliPhone']">
                 מספר פלאפון נדרש
+
             </div>
             <div class="styleA">
                 <input type="text" pInputText formControlName="Email" formControlName="Email" type="email" />
@@ -70,4 +73,9 @@
         </div>
         <button type="submit" pButton label="Submit"></button>
     </form>
+</div>
+
+<div *ngIf="FormFiled">
+
+    <app-verification [InpuPhone]="organizationForm.get('Users').get('Phone').value"></app-verification>
 </div>

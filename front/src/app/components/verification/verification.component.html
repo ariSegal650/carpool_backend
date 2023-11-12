@@ -1,0 +1,21 @@
+<div class="verification">
+    <div class="form">
+        <h3>נשלח אליך קוד זיהוי לטלפון שמספרו {{InpuPhone}} </h3>
+        <div class="styleA">
+            <p-button label="בדוק" [raised]="true" severity="success" (onClick)="checkCode()" ></p-button>
+            <input type="text" pInputText [(ngModel)]="code"/>
+            <label for="name"> הכנס קוד </label>
+
+            <p *ngIf="seconds>0">תוכלו לשלוח שוב אם לא קיבלתם את הקוד בעוד {{seconds}} שניות</p>
+            <div class="SentAgain" *ngIf="seconds<1">
+                <P>שלח שוב קוד</P>
+                <div class="buutons">
+
+                    <p-button label="סמס" [raised]="true" (onClick)="SendVerification('sms')" ></p-button>
+                    <p-button label="שיחה קולית" [raised]="true" (onClick)="SendVerification('call')"></p-button>
+                    <p-button label="ווצאפ" [raised]="true" (onClick)="SendVerification('whatsapp')"></p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

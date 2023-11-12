@@ -1,7 +1,7 @@
 ﻿
 
 using LogicService.Dto;
-using MongoDB.Bson;
+using Microsoft.Extensions.Configuration;
 using Twilio;
 using Twilio.Rest.Verify.V2.Service;
 
@@ -10,24 +10,27 @@ namespace LogicService.Services
     public class VerificationService
     {
 
-       
-        public VerificationService()
+        private readonly IConfiguration _configuration;
+        public VerificationService(IConfiguration iconfiguration)
         {
-             TwilioClient.Init(accountSid, authToken);
+            _configuration = iconfiguration;
+            TwilioClient.Init(_configuration["accountSid"], _configuration["authToken"]);
         }
-        public ErrorResponse GetSmsVerification()
+
+        public SimpelResponse GetVerification(VerificationRequstDto requst)
         {
             try
             {
                 var verification = VerificationResource.Create(
-                    pathServiceSid: "VAe4fa8e151fabab6ad41c8b0b7d2f0a02",
-                    to: "+18482971108",
-                    channel: "sms",
+                    pathServiceSid: _configuration["_pathServiceSid"],
+                    to: requst.Phone,
+                    channel: requst.Channel,
                      locale: "he"
                 );
+
                 if (verification.Status != "canceled")
                     return new(true, verification.DateCreated.ToString());
-            return new(false, verification.DateCreated.ToString());
+                return new(false, verification.DateCreated.ToString());
             }
             catch (Exception e)
             {
@@ -36,16 +39,15 @@ namespace LogicService.Services
             }
 
         }
-        public void CheckSms(string code)
+        public bool ChecCode(VerificationRequstDto requst)
         {
             var verificationCheck = VerificationCheckResource.Create(
-                to: "+18482971108",
-                code: code,
-                pathServiceSid: "VAe4fa8e151fabab6ad41c8b0b7d2f0a02"
-
+                to: requst.Phone,
+                code: requst.Code,
+                pathServiceSid: _configuration["_pathServiceSid"]
             );
-          
-            Console.WriteLine(verificationCheck.Status);
+
+          return verificationCheck.Status == "approved" ? true : false;
         }
     }
 }

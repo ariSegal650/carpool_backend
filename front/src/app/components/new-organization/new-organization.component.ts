@@ -1,58 +1,61 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
+import { FileSelectEvent } from 'primeng/fileupload';
 import { OrganizationInfoDto, OrganizationUser } from 'src/app/models/organization';
 import { DataService } from 'src/app/services/data.service';
+import { MessageServiceClient } from 'src/app/services/message-service-client.service';
 
 
 @Component({
   selector: 'app-new-organization',
   templateUrl: './new-organization.component.html',
-  styleUrls: ['./new-organization.component.css']
+  styleUrls: ['./new-organization.component.css'],
 })
 export class NewOrganizationComponent implements OnInit {
 
   organizationForm: FormGroup;
   logoFile: File;
   imageToShow: any;
-
-  constructor(private data: DataService, private sanitizer: DomSanitizer) { }
+  FormFiled = false;
+  @ViewChild('fileUpload') fileUpload: any;
+  
+  constructor(private data: DataService, private _messegeService: MessageServiceClient) { }
 
   ngOnInit(): void {
+
+    //initializing form 
     this.organizationForm = new FormGroup({
-      Name: new FormControl(''),
+      Name: new FormControl('', Validators.required),
       Logo: new FormControl(''),
       Phone: new FormControl('', [this.israeliPhoneValidator]),
       Email: new FormControl('', Validators.email),
       Website: new FormControl(''),
-      Users:new FormGroup({
-        Name: new FormControl('',Validators.required),
-        Phone: new FormControl('', [Validators.required, this.israeliPhoneValidator]),
+      Users: new FormGroup({
+        Name: new FormControl('', Validators.required),
+        Phone: new FormControl('', [Validators.required]),
         Email: new FormControl('', Validators.email),
       })
-      
     });
   }
 
   //presents the image on html and save it as string
-  onBasicUploadAuto(eventImage: any) {
-
-    this.logoFile = eventImage.files[0];
+  onUploadImage(eventImage: FileSelectEvent) {
+    
+ 
+    this.logoFile = eventImage.files[eventImage.files.length - 1];
     if (this.logoFile) {
       const reader = new FileReader();
       reader.readAsDataURL(this.logoFile);
 
       reader.onload = (event) => {
         this.organizationForm.get('Logo')?.setValue(reader.result.toString());
-        console.log(this.organizationForm);
 
         this.imageToShow = event.target?.result;
       };
-
     }
+    this.fileUpload.clear();
   }
-
-
+  
   onSubmit() {
     if (this.organizationForm.valid) {
       // Handle the form submission here
@@ -72,20 +75,28 @@ export class NewOrganizationComponent implements OnInit {
         this.organizationForm.value.Email,
         this.organizationForm.value.Website,
         user
-        );
+      );
 
-      console.log(organization);
-      this.data.CreateNewOrganization(organization);
+      this.data.CreateNewOrganization(organization).subscribe({
+        next: (value) => {
+          this.FormFiled = true
+        },
+        error: (err) => {
+          this._messegeService.showError("שגיאה בלתי צפויה קרתה נא לנסות שנית בעוד מספר דקות ")
+        },
+      })
 
-    } else {
-      console.log('Form is invalid. Please fill in all required fields.');
+    }
+    else {
+      this._messegeService.showError("אנא מלא את כל הפרמטרים שמסומנים עם כוכבית");
+
     }
   }
 
   israeliPhoneValidator(control: AbstractControl): ValidationErrors | null {
     const isValid = /^(?:(?:(\+?972|\(\+?972\)|\+?\(972\))(?:\s|\.|-)?([1-9]\d?))|(0[23489]{1})|(0[57]{1}[0-9]))(?:\s|\.|-)?([^0\D]{1}\d{2}(?:\s|\.|-)?\d{4})$/.test(control.value);
 
-    return isValid ? null : { israeliPhone: true };
+    return isValid || control.value == "" ? null : { israeliPhone: true };
   }
 
 }
