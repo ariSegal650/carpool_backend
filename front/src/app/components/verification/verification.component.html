@@ -1,6 +1,9 @@
 <div class="verification">
     <div class="form">
-        <h3>נשלח אליך קוד זיהוי לטלפון שמספרו {{InpuPhone}} </h3>
+
+        <span (click)="close()" class="pi pi-times"></span>
+
+        <h3>נשלח אליך קוד זיהוי לטלפון שמספרו {{this.InpuForm.Phone}} </h3>
         <div class="styleA">
             <p-button label="בדוק" [raised]="true" severity="success" (onClick)="checkCode()" ></p-button>
             <input type="text" pInputText [(ngModel)]="code"/>

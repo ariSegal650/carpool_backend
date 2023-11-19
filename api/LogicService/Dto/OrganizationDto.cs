@@ -4,19 +4,18 @@ namespace LogicService.Dto
 {
     public class OrganizationDto
     {
-        public string? Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Logo { get; set; } 
         public string? Phone { get; set; } 
         public string? Email { get; set; } 
         public string? Website { get; set; } 
-        public OrganizationUser? User { get; set; }
+        public OrganizationAdmin? admin { get; set; }
         public OrganizationInfoEO convertToEo()
         {
-            var users = new List<OrganizationUser>();
-            if (this.User != null)
+            var users = new List<OrganizationAdmin>();
+            if (this.admin != null)
             {
-                 users.Add(this.User);
+                 users.Add(this.admin);
             }
             var eo = new OrganizationInfoEO
             {
@@ -25,7 +24,7 @@ namespace LogicService.Dto
                 Phone = this.Phone,
                 Email = this.Email,
                 Website = this.Website,
-                Users = users,
+                Admins = users,
             };
             return eo;
         }

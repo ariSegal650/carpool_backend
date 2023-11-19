@@ -1,5 +1,5 @@
-<div class="form" *ngIf="!FormFiled">
-    <form [formGroup]="organizationForm" (ngSubmit)="onSubmit()" style="display: grid;">
+<div class="form">
+    <form [formGroup]="organizationForm" (ngSubmit)="onSubmit()" >
 
         <h1>טופס רישום עמותות/ ארגונים</h1>
 
@@ -77,5 +77,5 @@
 
 <div *ngIf="FormFiled">
 
-    <app-verification [InpuPhone]="organizationForm.get('Users').get('Phone').value"></app-verification>
+    <app-verification [InpuForm]="VerificationForm" (onClose)="handleClose()"></app-verification>
 </div>

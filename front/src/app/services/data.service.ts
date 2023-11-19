@@ -17,9 +17,9 @@ export class DataService {
     this.BasikPostRequst("post", "User", request);
   }
 
-  CreateNewOrganization(org: OrganizationInfoDto):Observable<any> {
+  CreateNewOrganization(org: OrganizationInfoDto): Observable<any> {
 
-   return this.http.post(this.baseUrl+"Organization",org);
+    return this.http.post(this.baseUrl + "Organization", org);
   }
 
   BasikPostRequst(requestType, url, body) {
@@ -30,9 +30,9 @@ export class DataService {
       error(err) {
         console.log("somthing went worng");
       },
-    })
+    }).unsubscribe();
   }
 
- 
+
 
 }

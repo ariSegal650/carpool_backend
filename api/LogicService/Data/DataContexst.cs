@@ -8,6 +8,7 @@ namespace LogicService.Data
     {
         internal readonly IMongoCollection<OrganizationInfoEO> _Organization;
         internal readonly IMongoCollection<UserInfoEO> _Users;
+        internal readonly IMongoCollection<Request> _requsts;
 
 
         public DataContexst()
@@ -17,7 +18,7 @@ namespace LogicService.Data
 
             _Organization = database.GetCollection<OrganizationInfoEO>("organization");
             _Users = database.GetCollection<UserInfoEO>("users");
-
+            _requsts = database.GetCollection<Request>("requsts");
         }
 
     }

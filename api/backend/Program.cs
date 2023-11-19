@@ -1,18 +1,12 @@
 
 
-using LogicService.Data;
-using LogicService.Services;
+using backend.Extensions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<DataContexst>();
-builder.Services.AddScoped<OrganizationService>();
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<VerificationService>();
-builder.Services.AddScoped<TokenService>();
-
-// Add services to the container.
-
+builder.Services.AddAplicationService(builder.Configuration);
+builder.Services.AddIdentityService(builder.Configuration);
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -33,10 +27,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

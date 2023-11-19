@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { VerificationDto } from '../models/Verification';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,30 +12,48 @@ export class VerificationService {
 
   constructor(private http: HttpClient) { }
 
-  async GetVerification(verificationfile:VerificationDto):Promise<boolean>{
-    
-    await this.http.post(this.baseUrl+"Verification",verificationfile).subscribe({
-       next:(value)=> {
-         console.log(value);
+  async GetVerification(verificationfile: VerificationDto): Promise<boolean> {
+    console.log(verificationfile);
 
-         return true;         
-       },
-     })
-
-     return false;
-   }
-
-   async CheckCode(verificationfile:VerificationDto):Promise<boolean>{
-
-    await this.http.post(this.baseUrl+"Verification/Check",verificationfile).subscribe({
-      next:(value)=> {
+    await this.http.post(this.baseUrl + "Verification", verificationfile).subscribe({
+      next: (value) => {
         console.log(value);
-
-        return true;         
+        return true;
       },
-    })
+      error: e => {
+        console.log(e);
 
+      }
+    })
     return false;
   }
-   }
+
+  async CheckCode(verificationfile: VerificationDto): Promise<boolean> {
+    var response: boolean;
+    await this.http.post<any>(this.baseUrl + "Verification/Check", verificationfile).subscribe({
+      next: (value) => {
+        console.log(value);
+        localStorage.setItem("token", value?.token);
+        response = true;
+      },
+      error: e => {
+        return false;
+      }
+    })
+    return response;
+
+  }
+
+  validateJwt(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+    return this.http.get<any>(this.baseUrl + "Verification", { headers });
+  }
+
+  LoginAdmin(LoginForm): Observable<any> {
+    return this.http.post<any>(this.baseUrl + "Verification", LoginForm);
+
+  }
+}
 

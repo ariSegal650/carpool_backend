@@ -1,0 +1,21 @@
+<div class="formLogin">
+    <form [formGroup]="LoginForm" (ngSubmit)="onSubmit()">
+
+        <h1>כניסה </h1>
+
+        <div class="styleA">
+            <input type="text" pInputText formControlName="NameOrg" type="text" />
+            <label for="name"><span class="required">*</span> :שם העמותה </label>
+        </div>
+        
+        <div class="styleA">
+            <input type="text" pInputText formControlName="Phone" type="tel" />
+            <label for="name"><span class="required">*</span> :פלאפון</label>
+        </div>
+
+        <button type="submit" pButton label="Submit"></button>
+    </form>
+    <div *ngIf="Sended">
+        <app-verification [InpuForm]="LoginForm.value" (onClose)="handleClose()" ></app-verification>
+    </div>
+</div>

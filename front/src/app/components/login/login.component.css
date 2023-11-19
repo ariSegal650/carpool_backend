@@ -1,16 +1,10 @@
-.verification{
+.formLogin{
     display: grid;
     justify-items: center;
     background: #f2f2f2;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 2;
+    height: 90vh;
 }
-.form{
+.formLogin form{
     display: grid;
     background: #fff;
     border-radius: 10px;
@@ -22,22 +16,25 @@
     -webkit-box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
     -o-box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
     -ms-box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
-    position: fixed;
-    top: 25%;
+    justify-items: center;
+    align-self: center;
 }
-.SentAgain{
-display: grid;
+.styleA{
+    margin: 7px 0;
+    display: grid;
+    align-items: center;
+    justify-content: space-between;
+    border: black 0.5 solid;
+    border-radius: 7px;
+    padding-right: 5px;
+    grid-template-columns: 2fr 1fr;
+     justify-items: end;
 }
-.SentAgain p{
+
+.required{
+    color: red;
+}
+h4{
     justify-self: center;
-}
-.buutons{
-    display: flex;
-    justify-content: space-evenly;
-}
-.pi{
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    cursor: pointer;
+    text-align: center;
 }

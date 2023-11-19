@@ -3,6 +3,7 @@
 using LogicService.Dto;
 using Microsoft.Extensions.Configuration;
 using Twilio;
+using Twilio.Jwt.AccessToken;
 using Twilio.Rest.Verify.V2.Service;
 
 namespace LogicService.Services
@@ -11,10 +12,16 @@ namespace LogicService.Services
     {
 
         private readonly IConfiguration _configuration;
-        public VerificationService(IConfiguration iconfiguration)
+        private readonly TokenService _tokenService;
+        private readonly OrganizationService _OrganizationService;
+
+        public VerificationService(IConfiguration iconfiguration,
+         TokenService tokenService, OrganizationService organizationService)
         {
             _configuration = iconfiguration;
             TwilioClient.Init(_configuration["accountSid"], _configuration["authToken"]);
+            _tokenService = tokenService;
+            _OrganizationService = organizationService;
         }
 
         public SimpelResponse GetVerification(VerificationRequstDto requst)
@@ -39,7 +46,8 @@ namespace LogicService.Services
             }
 
         }
-        public bool ChecCode(VerificationRequstDto requst)
+
+        public async Task<OrgResponseDto?> ChecCode(VerificationRequstDto requst)
         {
             var verificationCheck = VerificationCheckResource.Create(
                 to: requst.Phone,
@@ -47,7 +55,33 @@ namespace LogicService.Services
                 pathServiceSid: _configuration["_pathServiceSid"]
             );
 
-          return verificationCheck.Status == "approved" ? true : false;
+            if (verificationCheck.Status == "approved")
+            {
+                var organization = await _OrganizationService.GetOrganization(requst.Phone,requst.NameOrg);
+
+                if (organization != null)
+                {
+                    var admin = await _OrganizationService.GetAdmin(organization, requst.Phone);
+
+                    if (admin != null)
+                    {
+                        admin.Confirmed = true;
+                        var a = _tokenService.GenerateJwtToken(organization.Id, admin.Phone, admin.Role);
+                        return new OrgResponseDto
+                        {
+                            Id = requst.Phone,
+                            Token = a,
+                        };
+                    }
+                }
+            }
+            else
+            {
+               // return new ErrorResponse(false, "not approved");
+               
+            }
+
+            return null;
         }
     }
 }

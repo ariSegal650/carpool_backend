@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { FileSelectEvent } from 'primeng/fileupload';
+import { Login } from 'src/app/models/Verification';
 import { OrganizationInfoDto, OrganizationUser } from 'src/app/models/organization';
 import { DataService } from 'src/app/services/data.service';
 import { MessageServiceClient } from 'src/app/services/message-service-client.service';
@@ -18,7 +19,8 @@ export class NewOrganizationComponent implements OnInit {
   imageToShow: any;
   FormFiled = false;
   @ViewChild('fileUpload') fileUpload: any;
-  
+  VerificationForm: Login;
+
   constructor(private data: DataService, private _messegeService: MessageServiceClient) { }
 
   ngOnInit(): void {
@@ -40,8 +42,7 @@ export class NewOrganizationComponent implements OnInit {
 
   //presents the image on html and save it as string
   onUploadImage(eventImage: FileSelectEvent) {
-    
- 
+
     this.logoFile = eventImage.files[eventImage.files.length - 1];
     if (this.logoFile) {
       const reader = new FileReader();
@@ -55,7 +56,7 @@ export class NewOrganizationComponent implements OnInit {
     }
     this.fileUpload.clear();
   }
-  
+
   onSubmit() {
     if (this.organizationForm.valid) {
       // Handle the form submission here
@@ -77,6 +78,7 @@ export class NewOrganizationComponent implements OnInit {
         user
       );
 
+      this.VerificationForm = new Login(this.organizationForm.value.Name, this.organizationForm.get('Users').get('Phone').value)
       this.data.CreateNewOrganization(organization).subscribe({
         next: (value) => {
           this.FormFiled = true
@@ -93,6 +95,9 @@ export class NewOrganizationComponent implements OnInit {
     }
   }
 
+  handleClose(){
+    this.FormFiled=false;
+  }
   israeliPhoneValidator(control: AbstractControl): ValidationErrors | null {
     const isValid = /^(?:(?:(\+?972|\(\+?972\)|\+?\(972\))(?:\s|\.|-)?([1-9]\d?))|(0[23489]{1})|(0[57]{1}[0-9]))(?:\s|\.|-)?([^0\D]{1}\d{2}(?:\s|\.|-)?\d{4})$/.test(control.value);
 

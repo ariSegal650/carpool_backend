@@ -1,5 +1,6 @@
 ﻿using LogicService.Dto;
 using LogicService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,10 +25,19 @@ namespace backend.Controllers
         }
 
         [HttpPost("Check")]
-        public IActionResult VerificationCheck([FromBody] VerificationRequstDto requstDto)
+        public async Task<IActionResult> VerificationCheck([FromBody] VerificationRequstDto requstDto)
         {
-            var approved = _VerificationService.ChecCode(requstDto);
-            return approved ? Ok() : BadRequest();
+            var approved =await _VerificationService.ChecCode(requstDto);
+            
+            if(approved==null) return BadRequest();
+            return Ok(approved);
+        }
+
+        [HttpGet]
+        [Authorize] 
+        public IActionResult ValidateJwt()
+        {
+            return Ok(new { message = "JWT is valid" });
         }
 
     }

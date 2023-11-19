@@ -16,18 +16,24 @@ namespace LogicService.EO
         public bool Confirmed { get; set; }
         public string? Secret { get; set; }
 
-        [BsonElement("users")]
-        [JsonPropertyName("users")]
-        public List<OrganizationUser>? Users { get; set; }
+        [BsonElement("admins")]
+        [JsonPropertyName("admins")]
+        public List<OrganizationAdmin>? Admins { get; set; }
 
     }
-    public class OrganizationUser
+    public class OrganizationAdmin
     {
+        public int UserId { get; set; }=1;
         public string Name { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public int LevelAdmin { get; set; } = 0;
-
+        public string Role { get; set; } = "User";
+        public bool Confirmed { get; set; }
+        
+        internal Task<OrganizationAdmin> FirstOrDefaultAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

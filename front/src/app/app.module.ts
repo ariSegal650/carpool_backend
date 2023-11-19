@@ -16,6 +16,7 @@ import { MessageService } from 'primeng/api';
 import { VerificationComponent } from './components/verification/verification.component';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { ButtonModule } from 'primeng/button';
     RequstComponent,
     NewOrganizationComponent,
     VerificationComponent,
+    LoginComponent,
     
   ],
   imports: [

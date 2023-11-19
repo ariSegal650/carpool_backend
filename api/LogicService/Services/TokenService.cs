@@ -1,6 +1,7 @@
-using LogicService.Dto;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -15,29 +16,31 @@ namespace LogicService.Services
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(iconfiguration["TokenKey"]));
         }
 
-        public string CreateToken(OrganizationDto org)
+
+        public string GenerateJwtToken(string CompanyId,string adminPhone, string role)
         {
-            var claims = new List<Claim>
+           
+
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
-                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.NameId, org.Id ?? ""),
-                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Name, org.Name),
-
-            };
-
-            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
-
-            var tokenDescripter = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(15),
-                SigningCredentials = creds
+                Subject = new ClaimsIdentity(new List<Claim>
+                {
+                  new Claim(ClaimTypes.NameIdentifier,CompanyId),
+                  new Claim(ClaimTypes.MobilePhone, adminPhone),
+                  new Claim(ClaimTypes.Role, role),
+                }),
+                Expires = DateTime.Now.AddDays(15), // Set token expiration time
+                SigningCredentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256Signature)
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
+            
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var response=  tokenHandler.WriteToken(token);
+            Console.WriteLine($"Generated Token: {response}");
 
-            var token = tokenHandler.CreateToken(tokenDescripter);
-
-            return tokenHandler.WriteToken(token);
+            return response;
         }
+
     }
 }

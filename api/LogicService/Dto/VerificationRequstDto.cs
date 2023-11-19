@@ -5,10 +5,10 @@ namespace LogicService.Dto
     {
         public string Channel { get; set; }=string.Empty;
         public string Phone { get; set; } = string.Empty;
-        public DateTime? Time { get; set; }
+        public string NameOrg { get; set; } = string.Empty;
         public string? Code { get; set; }
+        public DateTime? Time { get; set; }
 
-       
     }
     
 }

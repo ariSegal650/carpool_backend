@@ -7,7 +7,7 @@ export class OrganizationInfoDto {
   public Phone: string | null = null;
   public Email: string | null = null;
   public Website: string | null = null;
-  public User: OrganizationUser |null;
+  public admin: OrganizationUser | null;
   constructor(
     Name: string,
     Logo: string,
@@ -21,7 +21,7 @@ export class OrganizationInfoDto {
     this.Phone = Phone;
     this.Email = Email;
     this.Website = Website;
-    this.User=Users;
+    this.admin = Users;
   }
 }
 
