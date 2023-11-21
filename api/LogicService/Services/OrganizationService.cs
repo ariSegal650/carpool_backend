@@ -3,7 +3,6 @@ using LogicService.Dto;
 using LogicService.EO;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace LogicService.Services
 {
@@ -30,6 +29,8 @@ namespace LogicService.Services
 
         public async Task<OrganizationInfoEO?> GetOrganization(string adminPhone, string nameOrg)
         {
+            adminPhone = adminPhone.Replace(" ","").ToLower();
+            nameOrg= nameOrg.Replace(" ", "").ToLower();
             var filter = Builders<OrganizationInfoEO>.Filter.And(
         Builders<OrganizationInfoEO>.Filter.Eq(org => org.Name, nameOrg),
         Builders<OrganizationInfoEO>.Filter.ElemMatch(org => org.Admins, admin => admin.Phone == adminPhone)
@@ -49,26 +50,6 @@ namespace LogicService.Services
 
             if (admin == null) return null;
             return admin;
-        }
-
-        public async Task<List<Request>?> GetAllRequest(string jwt)
-        {
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(jwt) as JwtSecurityToken;
-            var organizationId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
-
-            // Check if organizationId is not null
-            if (organizationId == null)
-            {
-                return null;
-            }
-
-
-            var filter = Builders<Request>.Filter.Eq(req => req.Id_Org, organizationId);
-            var request = await _DataContexst._requsts.Find(filter).ToListAsync();
-
-            return request;
-
         }
 
         public async Task<List<OrganizationInfoEO>> GetAsync()

@@ -1,4 +1,5 @@
 ﻿using LogicService.Data;
+using LogicService.Profiles;
 using LogicService.Services;
 
 namespace backend.Extensions
@@ -13,6 +14,9 @@ namespace backend.Extensions
             services.AddScoped<VerificationService>();
             services.AddScoped<TokenService>();
             services.AddScoped<RequstService>();
+
+            services.AddAutoMapper(typeof(MappingProfile));
+
 
 
             return services;

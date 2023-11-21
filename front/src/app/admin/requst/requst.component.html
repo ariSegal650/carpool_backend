@@ -1,0 +1,76 @@
+<div [ngClass]="{'running_over': running_over}">
+
+    <div class="form" [ngClass]="{'formStyle': !running_over}">
+
+        
+        <span (click)="close()" class="pi pi-times"></span>
+        <form [formGroup]="requestForm" (ngSubmit)="onSubmit()" style="display: grid;">
+
+            <div class="personlInfo">
+                <h4>מלא פרטים על הלקוח</h4>
+                <div class="styleA">
+                    <input type="text" pInputText formControlName="Name" />
+                    <label for="name"> <span class="required">*</span>:שם</label>
+                </div>
+                <div class="styleA">
+                    <input type="text" pInputText formControlName="Phone" />
+                    <label for="phone"><span class="required">*</span> :פלאפון</label>
+                </div>
+
+            </div>
+
+            <div class="styleA">
+                <p-dropdown [options]="typeTask" optionLabel="name" formControlName="Type" [showClear]=true
+                    placeholder="בחר סוג משימה ">
+                </p-dropdown>
+
+                <label for="type"><span class="required">*</span> :סוג משימה</label>
+            </div>
+
+            <div class="styleA"
+                [ngClass]="{'disabled': requestForm.get('Type').pristine || requestForm.get('Type').value == null || (requestForm.get('Type').value?.code != 1 && requestForm.get('Type').value !== null)}">
+                <p-inputNumber formControlName="Count" inputId="minmax" [min]="0" [max]="10"> </p-inputNumber>
+                <label for="count"> :כמות אנשים </label>
+            </div>
+
+            <div class="styleA"
+                [ngClass]="{'disabled': requestForm.get('Type').pristine || requestForm.get('Type').value == null || (requestForm.get('Type').value?.code != 2 && requestForm.get('Type').value !== null)}">
+                <p-dropdown [options]="CarSize" formControlName="CarSize" optionLabel="name" [showClear]=true
+                    placeholder="גודל רכב">
+                </p-dropdown>
+                <label for="carSize"> :גודל רכב למשלוחים </label>
+            </div>
+            <div class="styleA">
+                <input type="text" pInputText formControlName="Origin" />
+                <label for="origin"><span class="required">*</span> :מוצא</label>
+            </div>
+            <div class="styleA">
+                <input type="text" pInputText formControlName="Destination" />
+                <label for="destination"><span class="required">*</span> :יעד</label>
+            </div>
+            <div class="styleA">
+                <p-calendar dateFormat="d.m.y" [showTime]="true" formControlName="Date"></p-calendar>
+                <label for="date"><span class="required">*</span> :תאריך</label>
+            </div>
+
+            <div class="styleA">
+                <p-calendar dateFormat="d.m.y" [showTime]="true" formControlName="DateEnd">
+                </p-calendar>
+                <label for="dateEnd"> :תאריך לא רלוונטי</label>
+            </div>
+            <div class="styleA">
+                <input type="text" pInputText formControlName="Phone_org" />
+                <label for="phone_org"> :טלפון ליצירת קשר</label>
+            </div>
+
+            <div class="styleA">
+                <textarea rows="3" cols="23" pInputTextarea formControlName="Notes"></textarea>
+
+                <label for="notes"> :הערות</label>
+            </div>
+            <button type="submit" pButton label="Submit"></button>
+        </form>
+
+
+    </div>
+</div>

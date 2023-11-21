@@ -1,1 +1,44 @@
-<p>dashboard works!</p>
+<div class="main">
+    <div class="add_task">
+        <p-button label="+" [rounded]="true" [text]="true" [raised]="true" severity="help"
+            (click)="addTask()"></p-button>
+        <p>הוסף נסיעה</p>
+    </div>
+    <div class="card">
+        <p-table [value]="tasks" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>מוצא</th>
+                    <th>יעד</th>
+                    <th>סוג</th>
+                    <th>שם לקוח</th>
+                    <th>פלאפון</th>
+                    <th>תאריך</th>
+                    <th>תאריך לא רלוונטי</th>
+                    <th>מנהל אחראי</th>
+                    <th>הערות</th>
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-task>
+                <tr>
+                    <td>{{ task.origin }}</td>
+                    <td>{{ task.destination }}</td>
+                    <td>{{ task.type }}</td>
+                    <td>{{ task.name }}</td>
+                    <td>{{ task.phone }}</td>
+                    <td>{{ task.date }}</td>
+                    <td>{{ task.dateEnd }}</td>
+                    <td></td>
+                    <td>{{ task.notes }}</td>
+
+
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <div class="add_task_component" *ngIf="showRequstComponent">
+        <app-requst [running_over]="true" (onClose)="addTask()"></app-requst>
+    </div>
+</div>

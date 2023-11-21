@@ -1,0 +1,29 @@
+.main{
+    display: grid;
+    margin: 25px 5px 5px 5px;
+}
+.add_task{
+    background: #fff;
+    border-radius: 10px;
+    margin: 15px 0;
+    overflow: hidden;
+    padding: 5px 21px 5px;
+    box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
+    -moz-box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
+    -webkit-box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
+    -o-box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
+    -ms-box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
+    /* justify-items: center; */
+    /* align-self: center; */
+    /* width: min-content; */
+    display: grid;
+    /* align-self: center; */
+    justify-self: end;
+    grid-template-columns: 1fr 1fr;
+}
+.add_task p{
+    margin-left: 5px;
+}
+.card{
+    direction: rtl;
+}

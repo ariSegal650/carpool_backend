@@ -26,7 +26,7 @@ namespace LogicService.Services
                 Subject = new ClaimsIdentity(new List<Claim>
                 {
                   new Claim(ClaimTypes.NameIdentifier,CompanyId),
-                  new Claim(ClaimTypes.MobilePhone, adminPhone),
+                  new Claim("MobilePhone", adminPhone),
                   new Claim(ClaimTypes.Role, role),
                 }),
                 Expires = DateTime.Now.AddDays(15), // Set token expiration time

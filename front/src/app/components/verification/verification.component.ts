@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
 import { Login, VerificationDto } from 'src/app/models/Verification';
 import { VerificationService } from 'src/app/services/verification.service';
 
@@ -45,7 +46,6 @@ export class VerificationComponent implements OnInit{
   async checkCode() {
     var result = await this._VerificationService.CheckCode(new VerificationDto(this.Channel, this.InpuForm.Phone,this.InpuForm.NameOrg,this.code));
     result ? console.log("sucess") : console.log("erro");
-
   }
 
   formatPhoneNumber() {

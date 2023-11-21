@@ -1,4 +1,5 @@
-﻿using LogicService.EO;
+﻿using LogicService.Dto;
+using LogicService.EO;
 using LogicService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,13 +18,30 @@ namespace backend.Controllers
             _RequstService = dB;
         }
 
-      //  [Authorize]
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddRequst([FromBody] Request request)
+        public async Task<IActionResult> AddRequst([FromBody] RequstDto request)
         {
-            var response=await _RequstService.AddReuqst(request);
+            //  JWT is stored in the HttpContext
+            var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var response=await _RequstService.AddReuqst(request,jwt);
            
             return response ? Ok() : BadRequest();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetAllTasks()
+        {
+            //  JWT is stored in the HttpContext
+            var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var response = await _RequstService.GetAllRequest(jwt);
+
+            if (response == null) return BadRequest();
+
+            return Ok(response);
         }
     }
 }

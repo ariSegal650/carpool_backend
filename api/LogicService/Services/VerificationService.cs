@@ -49,39 +49,41 @@ namespace LogicService.Services
 
         public async Task<OrgResponseDto?> ChecCode(VerificationRequstDto requst)
         {
-            var verificationCheck = VerificationCheckResource.Create(
-                to: requst.Phone,
-                code: requst.Code,
-                pathServiceSid: _configuration["_pathServiceSid"]
-            );
-
-            if (verificationCheck.Status == "approved")
+            try
             {
-                var organization = await _OrganizationService.GetOrganization(requst.Phone,requst.NameOrg);
+                var verificationCheck = VerificationCheckResource.Create(
+        to: requst.Phone,
+        code: requst.Code,
+        pathServiceSid: _configuration["_pathServiceSid"]
+    );
 
-                if (organization != null)
+                if (verificationCheck.Status == "approved")
                 {
-                    var admin = await _OrganizationService.GetAdmin(organization, requst.Phone);
+                    var organization = await _OrganizationService.GetOrganization(requst.Phone, requst.NameOrg);
 
-                    if (admin != null)
+                    if (organization != null)
                     {
-                        admin.Confirmed = true;
-                        var a = _tokenService.GenerateJwtToken(organization.Id, admin.Phone, admin.Role);
-                        return new OrgResponseDto
+                        var admin = await _OrganizationService.GetAdmin(organization, requst.Phone);
+
+                        if (admin != null)
                         {
-                            Id = requst.Phone,
-                            Token = a,
-                        };
+                            admin.Confirmed = true;
+                            var a = _tokenService.GenerateJwtToken(organization.Id, admin.Phone, admin.Role);
+                            return new OrgResponseDto
+                            {
+                                Id = requst.Phone,
+                                Token = a,
+                            };
+                        }
                     }
                 }
             }
-            else
+            catch (Exception)
             {
-               // return new ErrorResponse(false, "not approved");
-               
-            }
 
+            }
             return null;
+
         }
     }
 }

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { RequestOrg } from '../models/request';
 import { HttpClient } from '@angular/common/http';
 import { OrganizationInfoDto } from '../models/organization';
 import { Observable } from 'rxjs';
@@ -12,10 +11,6 @@ export class DataService {
 
   private baseUrl = "https://localhost:7012/api/"
   constructor(private http: HttpClient) { }
-
-  SendRequest(request: RequestOrg) {
-    this.BasikPostRequst("post", "User", request);
-  }
 
   CreateNewOrganization(org: OrganizationInfoDto): Observable<any> {
 

@@ -29,19 +29,7 @@ namespace backend.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetAllTasks()
-        {
-            //  JWT is stored in the HttpContext
-            var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-
-           var response=await _OrganizationService.GetAllRequest(jwt);
-
-            if (response == null) return BadRequest();
-
-            return Ok(response);    
-        }
+       
 
     }
 }
