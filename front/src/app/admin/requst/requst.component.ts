@@ -19,15 +19,15 @@ export class RequstComponent implements OnInit {
 
   requestForm: FormGroup;
   genders: dropDown[] | undefined;
-  typeTask:dropDown[]=[];
-  CarSize:dropDown[]=[];
-  @Input() running_over: boolean=false;
+  typeTask: dropDown[] = [];
+  CarSize: dropDown[] = [];
+  @Input() running_over: boolean = false;
   @Output() onClose: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private data:DataService) {}
+  constructor(private data: DataService) { }
 
   ngOnInit(): void {
-    
+
     this.requestForm = new FormGroup({
       Name: new FormControl('', Validators.required),
       Phone: new FormControl(''),
@@ -36,42 +36,48 @@ export class RequstComponent implements OnInit {
       CarSize: new FormControl(''),
       Origin: new FormControl('', Validators.required),
       Destination: new FormControl('', Validators.required),
-      Date: new FormControl( Validators.required),
-      DateEnd: new FormControl( Validators.required),
+      Date: new FormControl(Validators.required),
+      DateEnd: new FormControl(Validators.required),
       Phone_org: new FormControl(''),
       Notes: new FormControl('')
     });
     this.genders = [
       { name: 'זכר', code: 1 },
-      { name: 'נקבה', code:2 },
+      { name: 'נקבה', code: 2 },
       { name: 'אחר', code: 3 },
     ];
-    this.typeTask=[
+    this.typeTask = [
       { name: 'הסעה', code: 1 },
-      { name: 'משלוח', code:2 },
+      { name: 'משלוח', code: 2 },
       { name: 'אחר', code: 3 },
     ];
-    this.CarSize=[
+    this.CarSize = [
       { name: 'רכב קטן', code: 1 },
-      { name: 'רכב משפחתי', code:2 },
+      { name: 'רכב משפחתי', code: 2 },
       { name: 'רכב גדול (7+ מקומות)', code: 3 },
       { name: 'מסחרי', code: 4 },
       { name: 'משאית', code: 5 },
 
     ]
+    this.requestForm.get('Origin').valueChanges.subscribe((newValue) => {
+      fetch("https://api.geoapify.com/v1/geocode/autocomplete?text=" + newValue + "&lang=he&format=json&apiKey=a22c04fed7ef4822a95c96d549236102")
+        .then(response => response.json())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    });
   }
 
   onSubmit() {
-    
-    if(!this.requestForm.valid) return;
+
+    if (!this.requestForm.valid) return;
 
     console.log(this.requestForm.value);
-    
+
     const request: RequestAdmin = {
       Name: this.requestForm.value.Name,
       Phone: this.requestForm.value.Phone,
       Type: this.requestForm.value.Type.name,
-      Count:this.requestForm.value.Count ,
+      Count: this.requestForm.value.Count,
       CarSize: this.requestForm.value.CarSize.name,
       Origin: this.requestForm.value.Origin,
       Destination: this.requestForm.value.Destination,
@@ -82,14 +88,19 @@ export class RequstComponent implements OnInit {
       Notes: this.requestForm.value.Notes
     };
     console.log(request);
-    
+
     this.data.addReqqust(request).subscribe(
-      res=>console.log(res),
-      ero=>console.log(ero),
+      res => console.log(res),
+      ero => console.log(ero),
     )
   }
-  close(){
+  close() {
     this.onClose.emit();
   }
-  
+
+  OriginChenged(text) {
+    console.log(text);
+
+  }
+
 }

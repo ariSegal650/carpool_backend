@@ -21,7 +21,8 @@ import { AppRoutingModule } from './app-routing.module';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    SharedModule
+    SharedModule,
+   
   ],
   providers: [MessageService],
   bootstrap: [AppComponent]
