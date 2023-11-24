@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
+﻿using LogicService.EO;
 
 namespace LogicService.Dto
 {
@@ -12,8 +11,8 @@ namespace LogicService.Dto
         public string? Type { get; set; }
         public byte? Count { get; set; } = 0;
         public string? CarSize { get; set; }
-        public string? Origin { get; set; }
-        public string? Destination { get; set; }
+        public Place? Origin { get; set; }=new Place();
+        public Place? Destination { get; set; } = new Place();
         public DateTime? Date { get; set; }
         public DateTime? DateEnd { get; set; }
         public string? Phone_org { get; set; }
@@ -29,6 +28,7 @@ namespace LogicService.Dto
         public int UserId { get; set; } = 1;
         public string Name { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
-
     }
+
+
 }

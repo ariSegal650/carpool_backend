@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { RequestAdmin } from '../models/request';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Place, RequestAdmin } from '../models/request';
 import { DataService } from '../services/data.service';
+import { } from "googlemaps";
 
 interface dropDown {
   name: string;
@@ -17,14 +18,23 @@ interface dropDown {
 
 export class RequstComponent implements OnInit {
 
+  @ViewChild('origin') origin: any;
+  @ViewChild('destination') destination: any;
+  originResult: Place;
+  destinationResult: Place;
+
+  DateStart: Date = new Date();
+  DateEnd: Date = new Date();
+
   requestForm: FormGroup;
   genders: dropDown[] | undefined;
   typeTask: dropDown[] = [];
   CarSize: dropDown[] = [];
+
   @Input() running_over: boolean = false;
   @Output() onClose: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private data: DataService) { }
+  constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
 
@@ -36,11 +46,12 @@ export class RequstComponent implements OnInit {
       CarSize: new FormControl(''),
       Origin: new FormControl('', Validators.required),
       Destination: new FormControl('', Validators.required),
-      Date: new FormControl(Validators.required),
-      DateEnd: new FormControl(Validators.required),
+      Date: new FormControl(new Date(), [Validators.required]),
+      DateEnd: new FormControl(new Date() ,Validators.required),
       Phone_org: new FormControl(''),
       Notes: new FormControl('')
     });
+
     this.genders = [
       { name: 'זכר', code: 1 },
       { name: 'נקבה', code: 2 },
@@ -58,20 +69,14 @@ export class RequstComponent implements OnInit {
       { name: 'מסחרי', code: 4 },
       { name: 'משאית', code: 5 },
 
-    ]
-    this.requestForm.get('Origin').valueChanges.subscribe((newValue) => {
-      fetch("https://api.geoapify.com/v1/geocode/autocomplete?text=" + newValue + "&lang=he&format=json&apiKey=a22c04fed7ef4822a95c96d549236102")
-        .then(response => response.json())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
-    });
+    ];
+
   }
 
   onSubmit() {
 
-    if (!this.requestForm.valid) return;
-
     console.log(this.requestForm.value);
+    //if (!this.requestForm.valid) return;
 
     const request: RequestAdmin = {
       Name: this.requestForm.value.Name,
@@ -79,8 +84,8 @@ export class RequstComponent implements OnInit {
       Type: this.requestForm.value.Type.name,
       Count: this.requestForm.value.Count,
       CarSize: this.requestForm.value.CarSize.name,
-      Origin: this.requestForm.value.Origin,
-      Destination: this.requestForm.value.Destination,
+      Origin: this.originResult,
+       Destination: this.destinationResult,
       Date: this.requestForm.value.Date,
       DateEnd: this.requestForm.value.DateEnd,
       Phone_org: this.requestForm.value.Phone_org,
@@ -89,18 +94,127 @@ export class RequstComponent implements OnInit {
     };
     console.log(request);
 
-    this.data.addReqqust(request).subscribe(
+    this.dataService.addReqqust(request).subscribe(
       res => console.log(res),
       ero => console.log(ero),
     )
   }
+
   close() {
     this.onClose.emit();
   }
 
-  OriginChenged(text) {
-    console.log(text);
-
+  ngAfterViewInit() {
+   // console.log('nativeElement:', this.yourTemplateVariable.nativeElement); // Check if it's defined
+   console.log(859);
+    this.getPlaceAutocomplete(this.destination,"destination" );
+    this.getPlaceAutocomplete(this.origin,"origin" );
+   
   }
 
+
+  parseTime(StartOrEnd: string, event: Date) {
+    if (StartOrEnd == "start") {
+
+      var date1: Date;
+      date1 = this.requestForm.get('Date').value;
+      date1.setHours(event.getHours())
+      date1.setMinutes(event.getMinutes())
+      this.requestForm.get('Date').setValue(date1);
+      console.log(this.requestForm.get('Date').value);
+    }
+    else {
+      var date1: Date;
+      date1 = this.requestForm.get('DateEnd').value;
+      date1.setHours(event.getHours())
+      date1.setMinutes(event.getMinutes())
+      this.requestForm.get('DateEnd').setValue(date1);
+      console.log(this.requestForm.get('DateEnd').value);
+    }
+  }
+
+
+  private getPlaceAutocomplete(htmlElemnt, direction:string) {
+
+    const autocomplete = new google.maps.places.Autocomplete(htmlElemnt.nativeElement, {
+      componentRestrictions: { country: 'il' },
+      types: ['geocode','establishment'],
+      fields: ['name', 'geometry', 'address_components',]
+    });
+
+    google.maps.event.addListener(autocomplete, 'place_changed', () => {
+      const place = autocomplete.getPlace();
+      console.log(place);
+
+      // Extracting address components
+      const addressComponents = place.address_components;
+
+      // Extracting the street number
+      const streetNameComponent = addressComponents.find(component =>
+        component.types.includes('route')
+      );
+      const streetName = streetNameComponent ? streetNameComponent.long_name + "," : '';
+
+      // Extracting the street number
+      const streetNumberComponent = addressComponents.find(component =>
+        component.types.includes('street_number')
+      );
+      const streetNumber = streetNumberComponent ? streetNumberComponent.long_name + "," : '';
+
+      // Extracting the building name
+      const buildingComponent = addressComponents.find(component =>
+        component.types.includes('premise')
+      );
+      const buildingName = buildingComponent ? buildingComponent.long_name + "," : '';
+
+      // Extracting the city
+      const cityComponent = addressComponents.find(component =>
+        component.types.includes('locality')
+      );
+      const city = cityComponent ? cityComponent.long_name + "," : '';
+
+      // Extracting latitude and longitude
+      const latitude = place.geometry.location.lat();
+      const longitude = place.geometry.location.lng();
+
+      console.log('Street Name:', streetName);
+      console.log('Street Number:', streetNumber);
+      console.log('Building Name:', buildingName);
+      console.log('City:', city);
+      console.log('Latitude:', latitude);
+      console.log('Longitude:', longitude);
+      //this.requestForm.get('Origin').setValue(streetName + streetNumber + buildingName + city)
+     
+
+      if(direction=="origin"){
+        this.originResult = new Place("", city, latitude, longitude);
+        this.originResult.Name = streetName + streetNumber + buildingName + city
+      }
+      else{
+        this.destinationResult = new Place("", city, latitude, longitude);
+        this.destinationResult.Name = streetName + streetNumber + buildingName + city
+      }
+    });
+  };
+
+
+
 }
+
+// dateValidator(): ValidatorFn {
+//   return (control: AbstractControl): ValidationErrors | null => {
+//     if (control.value === null || control.value === undefined || control.value === '') {
+//       // Handle empty or undefined values if needed
+//     }
+
+//     const inputDate = new Date(control.value);
+
+//     // Check if it's a valid date
+//     if (isNaN(inputDate.getTime())) {
+//       return { invalidDate: true };
+//     }
+
+
+//     return null; 
+//   };
+// }

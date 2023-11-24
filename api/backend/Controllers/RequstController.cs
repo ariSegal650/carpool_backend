@@ -2,7 +2,6 @@
 using LogicService.EO;
 using LogicService.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
@@ -18,8 +17,8 @@ namespace backend.Controllers
             _RequstService = dB;
         }
 
-        [Authorize]
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddRequst([FromBody] RequstDto request)
         {
             //  JWT is stored in the HttpContext

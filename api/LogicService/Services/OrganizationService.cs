@@ -13,10 +13,12 @@ namespace LogicService.Services
         {
             _DataContexst = dataContexst;
         }
+
         public async Task<bool> CreateOrganization(OrganizationDto org)
         {
             try
             {
+                org.Name = System.Text.RegularExpressions.Regex.Replace(org.Name, @"\s+", " ").ToLower();
                 await _DataContexst._Organization.InsertOneAsync(org.convertToEo());
                 return true;
             }
@@ -29,12 +31,13 @@ namespace LogicService.Services
 
         public async Task<OrganizationInfoEO?> GetOrganization(string adminPhone, string nameOrg)
         {
-            adminPhone = adminPhone.Replace(" ","").ToLower();
-            nameOrg= nameOrg.Replace(" ", "").ToLower();
-            var filter = Builders<OrganizationInfoEO>.Filter.And(
-        Builders<OrganizationInfoEO>.Filter.Eq(org => org.Name, nameOrg),
-        Builders<OrganizationInfoEO>.Filter.ElemMatch(org => org.Admins, admin => admin.Phone == adminPhone)
-        );
+            
+             adminPhone = System.Text.RegularExpressions.Regex.Replace(adminPhone, @"\s+", " ");
+             nameOrg=  System.Text.RegularExpressions.Regex.Replace(nameOrg, @"\s+", " ").ToLower();
+             var filter = Builders<OrganizationInfoEO>.Filter.And(
+             Builders<OrganizationInfoEO>.Filter.Eq(org => org.Name, nameOrg),
+             Builders<OrganizationInfoEO>.Filter.ElemMatch(org => org.Admins, admin => admin.Phone == adminPhone)
+             );
 
             var organization = await _DataContexst._Organization.Find(filter).FirstOrDefaultAsync();
 
@@ -45,7 +48,7 @@ namespace LogicService.Services
         {
 
             if (org?.Admins == null) return null;
-
+            adminPhone = System.Text.RegularExpressions.Regex.Replace(adminPhone, @"\s+", " ");
             var admin = await Task.Run(() => org.Admins.FirstOrDefault(adm => adm.Phone == adminPhone));
 
             if (admin == null) return null;

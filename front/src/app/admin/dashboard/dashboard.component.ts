@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { RequestAdmin } from 'src/app/admin/models/request';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -10,7 +11,9 @@ import { RequestAdmin } from 'src/app/admin/models/request';
 export class DashboardComponent implements OnInit {
 
   tasks: RequestAdmin[] = []
-  showRequstComponent:boolean=false;
+  showRequstComponent: boolean = false;
+  @ViewChild('addresstext') addresstext: any;
+
   constructor(private _dataservice: DataService) { }
 
   ngOnInit(): void {
@@ -24,12 +27,12 @@ export class DashboardComponent implements OnInit {
       er => {
         console.log(er);
       }
-
     );
-   }
+  }
 
-   
-   addTask(){
-    this.showRequstComponent=!this.showRequstComponent;
-   }
+  addTask() {
+    this.showRequstComponent = !this.showRequstComponent;
+  }
+
+ 
 }

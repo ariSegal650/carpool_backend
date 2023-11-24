@@ -14,8 +14,8 @@ namespace LogicService.EO
         public string? Type { get; set; }
         public byte Count { get; set; }
         public string? CarSize { get; set; }
-        public string? Origin { get; set; }
-        public string? Destination { get; set; }
+        public Place? Origin { get; set; }
+        public Place? Destination { get; set; }
         public DateTime Date { get; set; }
         public DateTime? DateEnd { get; set; }
         public string? Phone_org { get; set; }

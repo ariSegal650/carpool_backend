@@ -1,6 +1,4 @@
-﻿
-
-using LogicService.Dto;
+﻿using LogicService.Dto;
 using Microsoft.Extensions.Configuration;
 using Twilio;
 using Twilio.Jwt.AccessToken;
@@ -28,6 +26,7 @@ namespace LogicService.Services
         {
             try
             {
+                requst.Phone = System.Text.RegularExpressions.Regex.Replace(requst.Phone, @"\s+", " ");
                 var verification = VerificationResource.Create(
                     pathServiceSid: _configuration["_pathServiceSid"],
                     to: requst.Phone,
@@ -51,11 +50,13 @@ namespace LogicService.Services
         {
             try
             {
+                requst.Phone = System.Text.RegularExpressions.Regex.Replace(requst.Phone, @"\s+", " ");
+
                 var verificationCheck = VerificationCheckResource.Create(
-        to: requst.Phone,
-        code: requst.Code,
-        pathServiceSid: _configuration["_pathServiceSid"]
-    );
+                to: requst.Phone,
+                code: requst.Code,
+                pathServiceSid: _configuration["_pathServiceSid"]
+                 );
 
                 if (verificationCheck.Status == "approved")
                 {

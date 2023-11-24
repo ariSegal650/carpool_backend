@@ -5,8 +5,8 @@ export class RequestAdmin {
     Type?: string;
     Count: number=0;
     CarSize?: string;
-    Origin?: string;
-    Destination?: string;
+    Origin?: Place;
+    Destination?: Place;
     Date?: Date=null;
     DateEnd?: Date;
     Phone_org?: string;
@@ -22,4 +22,18 @@ export class OrganizationAdmin {
     Name: string = '';
     Phone: string = '';
     Email: string = '';
+}
+
+export class Place 
+{
+    Name:string="";
+    City:string="";
+    Lat:number=0;
+    Lng:number=0;
+    constructor(name:string,city:string,_lat:number,_long:number){
+        this.Name=name;
+        this.City=city;
+        this.Lat=_lat;
+        this.Lng=_long;
+    }
 }

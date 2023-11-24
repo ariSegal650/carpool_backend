@@ -15,14 +15,14 @@ import { AppRoutingModule } from './app-routing.module';
     NewOrganizationComponent,
     VerificationComponent,
     LoginComponent,
-
+    
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     SharedModule,
-   
+
   ],
   providers: [MessageService],
   bootstrap: [AppComponent]

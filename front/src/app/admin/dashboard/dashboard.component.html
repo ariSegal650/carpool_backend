@@ -27,8 +27,8 @@
                     <td>{{ task.type }}</td>
                     <td>{{ task.name }}</td>
                     <td>{{ task.phone }}</td>
-                    <td>{{ task.date }}</td>
-                    <td>{{ task.dateEnd }}</td>
+                    <td>{{ task.date |date :'short'}}</td>
+                    <td>{{ task.dateEnd |date :'short'}}</td>
                     <td></td>
                     <td>{{ task.notes }}</td>
 
