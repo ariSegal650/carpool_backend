@@ -1,11 +1,7 @@
 ﻿using AutoMapper;
 using LogicService.Dto;
 using LogicService.EO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace LogicService.Profiles
 {
@@ -16,6 +12,8 @@ namespace LogicService.Profiles
            
             CreateMap<Request, RequstDto>().ReverseMap();
             CreateMap<OrganizationAdmin, OrganizationAdminDto>().ReverseMap();
+
+            CreateMap<OrganizationDto, OrganizationInfoEO>().ForMember(dest => dest.Secret, opt => opt.Ignore()).ReverseMap();
         }
     }
 }

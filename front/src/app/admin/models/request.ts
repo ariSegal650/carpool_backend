@@ -28,9 +28,9 @@ export class Place
 {
     Name:string="";
     City:string="";
-    Lat:number=0;
-    Lng:number=0;
-    constructor(name:string,city:string,_lat:number,_long:number){
+    Lat:string="";
+    Lng:string="";
+    constructor(name:string,city:string,_lat:string,_long:string){
         this.Name=name;
         this.City=city;
         this.Lat=_lat;

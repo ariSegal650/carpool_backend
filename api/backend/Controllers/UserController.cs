@@ -32,35 +32,18 @@ namespace backend.Controllers
         }
 
         [HttpPost("test")]
-        public IActionResult test([FromBody] aa coord)
+        public async Task<IActionResult> test([FromBody] UserLatLng coord)
         {
-            const double earthRadius = 6371; // Earth's radius in kilometers
+           var response=await _userService.GetDistanceAsync(coord);
 
-            // Compute the differences in latitude and longitude between the two coordinates
-            double dLat = DegreesToRadians(coord.b.Lat - coord.a.Lat);
-            double dLng = DegreesToRadians(coord.b.Lng - coord.a.Lng);
-
-            // Calculate the Haversine of half the angular distance along each axis
-            double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-                       Math.Cos(DegreesToRadians(coord.a.Lat)) * Math.Cos(DegreesToRadians(coord.b.Lat)) *
-                       Math.Sin(dLng / 2) * Math.Sin(dLng / 2);
-
-            // Calculate the central angle (in radians) using the inverse Haversine
-            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-
-            // Calculate the distance using the Earth's radius and the central angle
-            double distance = earthRadius * c;
-
-            return Ok(distance);
+            return Ok(response);
         }
 
-        // Helper function to convert degrees to radians
-        private static double DegreesToRadians(double degrees)
+        [HttpGet("test1")]
+        public async Task<IActionResult> test1()
         {
-            return (degrees * Math.PI) / 180;
+            return Ok("589686950");
         }
-
-
 
     }
 

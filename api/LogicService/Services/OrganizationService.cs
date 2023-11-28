@@ -1,4 +1,5 @@
-﻿using LogicService.Data;
+﻿using AutoMapper;
+using LogicService.Data;
 using LogicService.Dto;
 using LogicService.EO;
 using MongoDB.Bson;
@@ -9,15 +10,19 @@ namespace LogicService.Services
     public class OrganizationService
     {
         private readonly DataContexst _DataContexst;
-        public OrganizationService(DataContexst dataContexst)
+        private readonly IMapper _mapper;
+
+        public OrganizationService(DataContexst dataContexst, IMapper mapper)
         {
             _DataContexst = dataContexst;
+            _mapper = mapper;
         }
 
         public async Task<bool> CreateOrganization(OrganizationDto org)
         {
             try
             {
+               
                 org.Name = System.Text.RegularExpressions.Regex.Replace(org.Name, @"\s+", " ").ToLower();
                 await _DataContexst._Organization.InsertOneAsync(org.convertToEo());
                 return true;

@@ -21,6 +21,7 @@ namespace LogicService.EO
         public List<OrganizationAdmin>? Admins { get; set; }
 
     }
+
     public class OrganizationAdmin
     {
         public int UserId { get; set; }=1;

@@ -10,12 +10,15 @@ namespace LogicService.Dto
         public string? Email { get; set; } 
         public string? Website { get; set; } 
         public OrganizationAdmin? admin { get; set; }
+
+        
         public OrganizationInfoEO convertToEo()
         {
-            var users = new List<OrganizationAdmin>();
+           var admins = new List<OrganizationAdmin>();
+
             if (this.admin != null)
             {
-                 users.Add(this.admin);
+                admins.Add(this.admin);
             }
             var eo = new OrganizationInfoEO
             {
@@ -24,7 +27,7 @@ namespace LogicService.Dto
                 Phone = this.Phone,
                 Email = this.Email,
                 Website = this.Website,
-                Admins = users,
+                Admins = admins,
             };
             return eo;
         }

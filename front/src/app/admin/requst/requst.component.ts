@@ -187,11 +187,11 @@ export class RequstComponent implements OnInit {
      
 
       if(direction=="origin"){
-        this.originResult = new Place("", city, latitude, longitude);
+        this.originResult = new Place("", city, latitude.toString(), longitude.toString());
         this.originResult.Name = streetName + streetNumber + buildingName + city
       }
       else{
-        this.destinationResult = new Place("", city, latitude, longitude);
+        this.destinationResult = new Place("", city, latitude.toString(), longitude.toString());
         this.destinationResult.Name = streetName + streetNumber + buildingName + city
       }
     });

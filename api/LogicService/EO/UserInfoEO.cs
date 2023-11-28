@@ -16,8 +16,7 @@ namespace LogicService.EO
     }
     public class Car
     {
-        public int Id { get; set; }
-        public int Year { get; set; }
+        public int? Year { get; set; }
         public string? TypeCar { get; set; }
         public string? seats { get; set; }
         public string? TrunkSize {get; set;}
