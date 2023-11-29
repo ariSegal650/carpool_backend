@@ -31,7 +31,7 @@ namespace LogicService.Services
                     pathServiceSid: _configuration["_pathServiceSid"],
                     to: requst.Phone,
                     channel: requst.Channel,
-                     locale: "he"
+                    locale: "he"
                 );
 
                 if (verification.Status != "canceled")
@@ -46,7 +46,7 @@ namespace LogicService.Services
 
         }
 
-        public async Task<OrgResponseDto?> ChecCode(VerificationRequstDto requst)
+        public async Task<OrgResponseDto> ChecCode(VerificationRequstDto requst)
         {
             try
             {
@@ -60,6 +60,7 @@ namespace LogicService.Services
 
                 if (verificationCheck.Status == "approved")
                 {
+
                     var organization = await _OrganizationService.GetOrganization(requst.Phone, requst.NameOrg);
 
                     if (organization != null)
@@ -70,20 +71,22 @@ namespace LogicService.Services
                         {
                             admin.Confirmed = true;
                             var a = _tokenService.GenerateJwtToken(organization.Id, admin.Phone, admin.Role);
-                            return new OrgResponseDto
-                            {
-                                Id = requst.Phone,
-                                Token = a,
-                            };
+                            return new OrgResponseDto(true, "approved", requst.Phone, a);
+                            
                         }
                     }
+                }
+                else
+                {
+                    return new OrgResponseDto(false, "סיסמה לא נכונה");
+
                 }
             }
             catch (Exception)
             {
-
+              
             }
-            return null;
+            return new OrgResponseDto(false, "קרתה שגיאה");
 
         }
     }

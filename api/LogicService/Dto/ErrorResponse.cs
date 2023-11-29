@@ -17,6 +17,7 @@ namespace LogicService.Dto
         public bool sucsses { get; set; }
         public string? errorText { get; set; } = string.Empty;
     }
+
     public class SimpelResponse
     {
         public SimpelResponse(bool sucsses, string? errorText)

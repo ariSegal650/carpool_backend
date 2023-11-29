@@ -80,12 +80,17 @@ export class NewOrganizationComponent implements OnInit {
 
       this.VerificationForm = new Login(this.organizationForm.value.Name, this.organizationForm.get('Users').get('Phone').value)
       this._messegeService.showLoading();
+
       this.data.CreateNewOrganization(organization).subscribe({
         next: (value) => {
+          this._messegeService.hideLoading();
           this.FormFiled = true
         },
         error: (err) => {
-          this._messegeService.showError("שגיאה בלתי צפויה קרתה נא לנסות שנית בעוד מספר דקות ")
+          this._messegeService.hideLoading();
+
+          this._messegeService.showError(err.error?.errorText ? err.error?.errorText : "שגיאה בלתי צפויה קרתה נא לנסות שנית בעוד מספר דקות ")
+          console.log(err);
         },
       })
 
@@ -96,8 +101,8 @@ export class NewOrganizationComponent implements OnInit {
     }
   }
 
-  handleClose(){
-    this.FormFiled=false;
+  handleClose() {
+    this.FormFiled = false;
   }
   israeliPhoneValidator(control: AbstractControl): ValidationErrors | null {
     const isValid = /^(?:(?:(\+?972|\(\+?972\)|\+?\(972\))(?:\s|\.|-)?([1-9]\d?))|(0[23489]{1})|(0[57]{1}[0-9]))(?:\s|\.|-)?([^0\D]{1}\d{2}(?:\s|\.|-)?\d{4})$/.test(control.value);

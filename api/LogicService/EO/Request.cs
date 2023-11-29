@@ -1,12 +1,13 @@
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
+using LogicService.Dto;
 
 namespace LogicService.EO
 {
     public class Request
     {
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonRepresentation(BsonType.ObjectId)] 
         public string? Id { get; set; }
         public string Id_Org { get; set; }=string.Empty;
         public string? Name { get; set; }
@@ -19,8 +20,7 @@ namespace LogicService.EO
         public DateTime Date { get; set; }
         public DateTime? DateEnd { get; set; }
         public string? Phone_org { get; set; }
-        public string? Admin_id { get; set; }
-        public string? Admin_Phone { get; set; }
+        public OrganizationAdminDto? Admin { get; set; }
         public bool Executed { get; set; }=false;
         public string? Id_User { get; set; }
         public DateTime Executed_Time { get; set; }

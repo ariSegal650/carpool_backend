@@ -1,0 +1,18 @@
+.absolute{
+    position: absolute;
+    height: 100vh;
+    width: 97vw;
+    display: grid;
+    justify-items: center;
+    height: 105vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 5;
+}
+.loading-overlay{
+    display: grid;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 20px 55px 33px;
+    align-self: center;
+}

@@ -20,10 +20,10 @@ export class DataService {
     return this.http.get<Array<RequestAdmin>>(this.baseUrl + "Requst", { headers });
   }
 
-  addReqqust(requestAdmin:RequestAdmin): Observable<Array<RequestAdmin>> {
+  addReqqust(requestAdmin:RequestAdmin): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
-    return this.http.post<Array<RequestAdmin>>(this.baseUrl + "Requst",requestAdmin, { headers });
+    return this.http.post<any>(this.baseUrl + "Requst",requestAdmin, { headers });
   }
 }

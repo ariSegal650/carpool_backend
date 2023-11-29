@@ -12,32 +12,36 @@ import { VerificationService } from 'src/app/services/verification.service';
 })
 export class LoginComponent implements OnInit {
   LoginForm: FormGroup
-  Sended:boolean;
+  Sended: boolean;
 
   constructor(
-    private _verificationService:VerificationService,
+    private _verificationService: VerificationService,
     private _messegeService: MessageServiceClient,
     private router: Router) {
-    
+
   }
 
   ngOnInit(): void {
     this.router.navigate(['admin'])
     this.LoginForm = new FormGroup({
       NameOrg: new FormControl('', Validators.required),
-      Phone: new FormControl('',[Validators.required, Validators.minLength(8)]),
+      Phone: new FormControl('', [Validators.required, Validators.minLength(8)]),
     })
   }
 
   onSubmit() {
-    this.Sended=false;
-    this.LoginForm.valid ? this.Sended=true :
-    this._messegeService.showError("חובה למלא את כל הפרטים");
+    this.Sended = false;
+    
+    if (!this.LoginForm.valid) {
+      this._messegeService.showError("חובה למלא את כל הפרטים");
+    }
+
+    this.Sended = true
   }
 
   handleClose() {
     this.Sended = false;
   }
-  
-  
+
+
 }

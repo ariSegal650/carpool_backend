@@ -24,9 +24,11 @@ namespace backend.Controllers
             //  JWT is stored in the HttpContext
             var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
-            var response=await _RequstService.AddReuqst(request,jwt);
+            var response = await _RequstService.AddReuqst(request,jwt);
            
-            return response ? Ok() : BadRequest();
+           if(!response.sucsses) 
+                return NotFound();
+           return Ok(response);
         }
 
         [HttpGet]

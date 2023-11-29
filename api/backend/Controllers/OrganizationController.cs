@@ -24,12 +24,11 @@ namespace backend.Controllers
         {
             var response = await _OrganizationService.CreateOrganization(org);
 
-            if (!response)
-                return BadRequest("somthing worng");
+            if (!response.sucsses)
+                return BadRequest(response);
             return Ok(response);
         }
 
-       
 
     }
 }

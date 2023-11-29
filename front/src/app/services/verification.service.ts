@@ -11,7 +11,7 @@ export class VerificationService {
 
   private baseUrl = "https://localhost:7012/api/"
 
-  constructor(private http: HttpClient,private router: Router) { }
+  constructor(private http: HttpClient) { }
 
   async GetVerification(verificationfile: VerificationDto): Promise<boolean> {
     console.log(verificationfile);
@@ -29,21 +29,10 @@ export class VerificationService {
     return false;
   }
 
-  async CheckCode(verificationfile: VerificationDto): Promise<boolean> {
-    var response: boolean;
-    await this.http.post<any>(this.baseUrl + "Verification/Check", verificationfile).subscribe({
-      next: (value) => {
-        console.log(value);
-        localStorage.setItem("token", value?.token);
-        this.router.navigate(['/admin'])
-        response = true;
-      },
-      error: e => {
-        return false;
-      }
-    })
-    return response;
+   CheckCode(verificationfile: VerificationDto):Observable<any> {
 
+    return this.http.post<any>(this.baseUrl + "Verification/Check", verificationfile);
+    
   }
 
   validateJwt(): Observable<any> {

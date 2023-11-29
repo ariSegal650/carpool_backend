@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } fro
 import { Place, RequestAdmin } from '../models/request';
 import { DataService } from '../services/data.service';
 import { } from "googlemaps";
+import { MessageServiceClient } from 'src/app/services/message-service-client.service';
 
 interface dropDown {
   name: string;
@@ -34,7 +35,8 @@ export class RequstComponent implements OnInit {
   @Input() running_over: boolean = false;
   @Output() onClose: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService,
+    private _messegeService: MessageServiceClient) { }
 
   ngOnInit(): void {
 
@@ -94,9 +96,20 @@ export class RequstComponent implements OnInit {
     };
     console.log(request);
 
+    this._messegeService.showLoading();
+
     this.dataService.addReqqust(request).subscribe(
-      res => console.log(res),
-      ero => console.log(ero),
+      res => {
+        this._messegeService.hideLoading();
+        this.close();
+        this._messegeService.showSuccess("הבקשה נוספה בהצלחה ");
+      },
+      err => {
+        this._messegeService.hideLoading();
+        this.close();
+        this._messegeService.showError(err.error?.errorText);
+
+      }
     )
   }
 

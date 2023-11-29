@@ -27,10 +27,11 @@ namespace backend.Controllers
         [HttpPost("Check")]
         public async Task<IActionResult> VerificationCheck([FromBody] VerificationRequstDto requstDto)
         {
-            var approved =await _VerificationService.ChecCode(requstDto);
+            var response =await _VerificationService.ChecCode(requstDto);
             
-            if(approved==null) return BadRequest();
-            return Ok(approved);
+            if(!response.sucsses)
+                return BadRequest(response);
+            return Ok(response);
         }
 
         [HttpGet]

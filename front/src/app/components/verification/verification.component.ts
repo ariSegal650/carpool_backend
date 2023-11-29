@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Login, VerificationDto } from 'src/app/models/Verification';
+import { MessageServiceClient } from 'src/app/services/message-service-client.service';
 import { VerificationService } from 'src/app/services/verification.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { VerificationService } from 'src/app/services/verification.service';
   templateUrl: './verification.component.html',
   styleUrls: ['./verification.component.css']
 })
-export class VerificationComponent implements OnInit{
+export class VerificationComponent implements OnInit {
 
   code: string;
   seconds = 35;
@@ -18,13 +19,15 @@ export class VerificationComponent implements OnInit{
   Channel: string;
 
 
-  constructor(private _VerificationService: VerificationService) {}
+  constructor(private _VerificationService: VerificationService,
+    private router: Router,
+    private _messegeService: MessageServiceClient) { }
 
 
   ngOnInit(): void {
     this.SendVerification('sms');
   }
- 
+
 
   StartTimer() {
     const interval = setInterval(() => {
@@ -34,18 +37,33 @@ export class VerificationComponent implements OnInit{
     }, 1000);
   }
 
-  async SendVerification(channel: string) { 
+  async SendVerification(channel: string) {
     console.log(this.InpuForm);
-       
+
     this.formatPhoneNumber()
     this.StartTimer()
     this.Channel = channel;
-    var result = await this._VerificationService.GetVerification(new VerificationDto(channel, this.InpuForm.Phone,this.InpuForm.NameOrg));
+    var result = await this._VerificationService.GetVerification(new VerificationDto(channel, this.InpuForm.Phone, this.InpuForm.NameOrg));
   }
 
   async checkCode() {
-    var result = await this._VerificationService.CheckCode(new VerificationDto(this.Channel, this.InpuForm.Phone,this.InpuForm.NameOrg,this.code));
-    result ? console.log("sucess") : console.log("erro");
+
+    this._messegeService.showLoading();
+
+    this._VerificationService.CheckCode(new VerificationDto(this.Channel, this.InpuForm.Phone, this.InpuForm.NameOrg, this.code)).subscribe(
+      value => {
+        this._messegeService.hideLoading();
+
+        console.log(value);
+        localStorage.setItem("token", value?.token);
+        this.router.navigate(['/admin'])
+      },
+      err => {
+        this._messegeService.hideLoading();
+        this._messegeService.showError(err.error?.errorText);
+      }
+    );
+
   }
 
   formatPhoneNumber() {
@@ -56,9 +74,9 @@ export class VerificationComponent implements OnInit{
     }
   }
 
-  close(){
+  close() {
     this.onClose.emit();
   }
-  
+
 }
 
