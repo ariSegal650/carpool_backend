@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MessageServiceClient {
 
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  public loading = this.loadingSubject.asObservable();
+  
   constructor(private messageService: MessageService) { }
 
   showSuccess(alert: string) {
@@ -23,4 +27,13 @@ export class MessageServiceClient {
   showError(alert: string) {
     this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: alert });
   }
+
+  showLoading() {
+    this.loadingSubject.next(true);
+  }
+
+  hideLoading() {
+    this.loadingSubject.next(false);
+  }
+  
 }

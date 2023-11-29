@@ -14,7 +14,8 @@ export class LoginComponent implements OnInit {
   LoginForm: FormGroup
   Sended:boolean;
 
-  constructor(private _verificationService:VerificationService,
+  constructor(
+    private _verificationService:VerificationService,
     private _messegeService: MessageServiceClient,
     private router: Router) {
     

@@ -8,6 +8,7 @@ import { SharedModule } from './shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
+import { LoadingComponent } from './components/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,7 @@ import { AppRoutingModule } from './app-routing.module';
     NewOrganizationComponent,
     VerificationComponent,
     LoginComponent,
-    
+    LoadingComponent,
   ],
   imports: [
     BrowserModule,

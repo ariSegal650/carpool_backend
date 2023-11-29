@@ -8,6 +8,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { CommonModule } from '@angular/common';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { CheckboxModule } from 'primeng/checkbox';
 
 const adminRoutes: Routes = [
 
@@ -29,6 +30,7 @@ const adminRoutes: Routes = [
     CommonModule,
     InputNumberModule,
     InputTextareaModule,
+    CheckboxModule,
     RouterModule.forChild(adminRoutes)
   ],
   exports: [RouterModule]

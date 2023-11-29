@@ -79,6 +79,7 @@ export class NewOrganizationComponent implements OnInit {
       );
 
       this.VerificationForm = new Login(this.organizationForm.value.Name, this.organizationForm.get('Users').get('Phone').value)
+      this._messegeService.showLoading();
       this.data.CreateNewOrganization(organization).subscribe({
         next: (value) => {
           this.FormFiled = true

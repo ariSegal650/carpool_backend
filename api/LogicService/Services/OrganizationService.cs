@@ -22,7 +22,6 @@ namespace LogicService.Services
         {
             try
             {
-               
                 org.Name = System.Text.RegularExpressions.Regex.Replace(org.Name, @"\s+", " ").ToLower();
                 await _DataContexst._Organization.InsertOneAsync(org.convertToEo());
                 return true;

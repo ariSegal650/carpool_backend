@@ -39,12 +39,7 @@ namespace backend.Controllers
             return Ok(response);
         }
 
-        [HttpGet("test1")]
-        public async Task<IActionResult> test1()
-        {
-            return Ok("589686950");
-        }
-
+        
     }
 
 }

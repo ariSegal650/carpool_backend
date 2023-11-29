@@ -11,6 +11,7 @@ namespace LogicService.Profiles
         {
            
             CreateMap<Request, RequstDto>().ReverseMap();
+
             CreateMap<OrganizationAdmin, OrganizationAdminDto>().ReverseMap();
 
             CreateMap<OrganizationDto, OrganizationInfoEO>().ForMember(dest => dest.Secret, opt => opt.Ignore()).ReverseMap();

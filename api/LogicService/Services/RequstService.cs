@@ -18,7 +18,7 @@ namespace LogicService.Services
             _mapper = mapper;
         }
 
-        public async Task<Boolean> AddReuqst(RequstDto request,string jwt)
+        public async Task<bool> AddReuqst(RequstDto request,string jwt)
         {
             try
             {
