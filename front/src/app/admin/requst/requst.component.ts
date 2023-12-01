@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Place, RequestAdmin } from '../models/request';
 import { DataService } from '../services/data.service';
 import { } from "googlemaps";
@@ -24,9 +24,9 @@ export class RequstComponent implements OnInit {
   originResult: Place;
   destinationResult: Place;
 
-  DateStart: Date = new Date();
-  DateEnd: Date = new Date();
-
+  // DateStart: Date = new Date();
+  // DateEnd: Date = new Date();
+  // startTime:  Date = new Date();
   requestForm: FormGroup;
   genders: dropDown[] | undefined;
   typeTask: dropDown[] = [];
@@ -34,22 +34,29 @@ export class RequstComponent implements OnInit {
 
   @Input() running_over: boolean = false;
   @Output() onClose: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() RequstSended: EventEmitter<boolean> = new EventEmitter<boolean>();
+
 
   constructor(private dataService: DataService,
     private _messegeService: MessageServiceClient) { }
 
   ngOnInit(): void {
 
+    const currentDatePlus24Hours = new Date();
+    currentDatePlus24Hours.setHours(currentDatePlus24Hours.getHours() + 5);
+
     this.requestForm = new FormGroup({
       Name: new FormControl('', Validators.required),
-      Phone: new FormControl(''),
+      Phone: new FormControl('',[Validators.required, this.israeliPhoneValidator.bind(this)]),
       Type: new FormControl(null, Validators.required),
       Count: new FormControl(0, Validators.required),
       CarSize: new FormControl(''),
       Origin: new FormControl('', Validators.required),
       Destination: new FormControl('', Validators.required),
       Date: new FormControl(new Date(), [Validators.required]),
-      DateEnd: new FormControl(new Date() ,Validators.required),
+      DateHour:new FormControl(new Date(), [Validators.required]),
+      DateEnd: new FormControl((new Date()) ,Validators.required),
+      DateEndHour: new FormControl(currentDatePlus24Hours ,Validators.required),
       Phone_org: new FormControl(''),
       Notes: new FormControl('')
     });
@@ -78,7 +85,10 @@ export class RequstComponent implements OnInit {
   onSubmit() {
 
     console.log(this.requestForm.value);
-    //if (!this.requestForm.valid) return;
+    if (!this.requestForm.valid) {
+      this._messegeService.showError("חובה למלאות את כל הערכים המסומנים בכוכב");
+      return;
+    };
 
     const request: RequestAdmin = {
       Name: this.requestForm.value.Name,
@@ -87,7 +97,7 @@ export class RequstComponent implements OnInit {
       Count: this.requestForm.value.Count,
       CarSize: this.requestForm.value.CarSize.name,
       Origin: this.originResult,
-       Destination: this.destinationResult,
+      Destination: this.destinationResult,
       Date: this.requestForm.value.Date,
       DateEnd: this.requestForm.value.DateEnd,
       Phone_org: this.requestForm.value.Phone_org,
@@ -103,6 +113,7 @@ export class RequstComponent implements OnInit {
         this._messegeService.hideLoading();
         this.close();
         this._messegeService.showSuccess("הבקשה נוספה בהצלחה ");
+        this.RequstSended.emit();
       },
       err => {
         this._messegeService.hideLoading();
@@ -118,11 +129,8 @@ export class RequstComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-   // console.log('nativeElement:', this.yourTemplateVariable.nativeElement); // Check if it's defined
-   console.log(859);
     this.getPlaceAutocomplete(this.destination,"destination" );
     this.getPlaceAutocomplete(this.origin,"origin" );
-   
   }
 
 
@@ -134,7 +142,6 @@ export class RequstComponent implements OnInit {
       date1.setHours(event.getHours())
       date1.setMinutes(event.getMinutes())
       this.requestForm.get('Date').setValue(date1);
-      console.log(this.requestForm.get('Date').value);
     }
     else {
       var date1: Date;
@@ -142,7 +149,6 @@ export class RequstComponent implements OnInit {
       date1.setHours(event.getHours())
       date1.setMinutes(event.getMinutes())
       this.requestForm.get('DateEnd').setValue(date1);
-      console.log(this.requestForm.get('DateEnd').value);
     }
   }
 
@@ -190,13 +196,12 @@ export class RequstComponent implements OnInit {
       const latitude = place.geometry.location.lat();
       const longitude = place.geometry.location.lng();
 
-      console.log('Street Name:', streetName);
-      console.log('Street Number:', streetNumber);
-      console.log('Building Name:', buildingName);
-      console.log('City:', city);
-      console.log('Latitude:', latitude);
-      console.log('Longitude:', longitude);
-      //this.requestForm.get('Origin').setValue(streetName + streetNumber + buildingName + city)
+      // console.log('Street Name:', streetName);
+      // console.log('Street Number:', streetNumber);
+      // console.log('Building Name:', buildingName);
+      // console.log('City:', city);
+      // console.log('Latitude:', latitude);
+      // console.log('Longitude:', longitude);
      
 
       if(direction=="origin"){
@@ -209,7 +214,11 @@ export class RequstComponent implements OnInit {
       }
     });
   };
+  israeliPhoneValidator(control: AbstractControl): ValidationErrors | null {
+    const isValid = /^(?:(?:(\+?972|\(\+?972\)|\+?\(972\))(?:\s|\.|-)?([1-9]\d?))|(0[23489]{1})|(0[57]{1}[0-9]))(?:\s|\.|-)?([^0\D]{1}\d{2}(?:\s|\.|-)?\d{4})$/.test(control.value);
 
+    return isValid || control.value == "" ? null : { israeliPhone: true };
+  }
 
 
 }

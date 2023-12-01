@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { FileSelectEvent } from 'primeng/fileupload';
+import { FileSelectEvent, UploadEvent } from 'primeng/fileupload';
 import { Login } from 'src/app/models/Verification';
 import { OrganizationInfoDto, OrganizationUser } from 'src/app/models/organization';
 import { DataService } from 'src/app/services/data.service';
@@ -45,6 +45,10 @@ export class NewOrganizationComponent implements OnInit {
 
     this.logoFile = eventImage.files[eventImage.files.length - 1];
     if (this.logoFile) {
+      console.log(this.logoFile);
+      console.log(this.logoFile.type);
+
+      
       const reader = new FileReader();
       reader.readAsDataURL(this.logoFile);
 
@@ -55,6 +59,34 @@ export class NewOrganizationComponent implements OnInit {
       };
     }
     this.fileUpload.clear();
+  }
+
+  uploadFile (images:File[])  {
+    console.log(images);
+    
+    if (images.length === 0) {
+      return;
+    }
+    
+    let fileToUpload = <File>images[0];
+    console.log(fileToUpload);
+    
+    const formData = new FormData();
+    formData.append('file', fileToUpload, fileToUpload.name);
+    console.log(formData);
+   
+   
+    this.data.AddLogoImage(fileToUpload).subscribe({
+      next:(value)=> {
+        console.log(value);
+        
+      },
+      error:(err)=> {
+        console.log(err);
+        
+      },
+    }
+    );
   }
 
   onSubmit() {

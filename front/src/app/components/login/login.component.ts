@@ -34,6 +34,7 @@ export class LoginComponent implements OnInit {
     
     if (!this.LoginForm.valid) {
       this._messegeService.showError("חובה למלא את כל הפרטים");
+      return;
     }
 
     this.Sended = true

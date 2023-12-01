@@ -37,6 +37,6 @@
     </div>
 
     <div class="add_task_component" *ngIf="showRequstComponent">
-        <app-requst [running_over]="true" (onClose)="addTask()"></app-requst>
+        <app-requst [running_over]="true" (onClose)="addTask()" (RequstSended)="ReloadTheRequests()"></app-requst>
     </div>
 </div>

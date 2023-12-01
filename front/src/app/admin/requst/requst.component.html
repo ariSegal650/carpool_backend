@@ -57,7 +57,7 @@
             </div>
 
             <div class="styleA">
-                <p-calendar [timeOnly]="true" (onSelect)="parseTime('start',$event)" placeholder="hh:mm"></p-calendar>
+                <p-calendar [timeOnly]="true" (onSelect)="parseTime('start',$event)" formControlName="DateHour" placeholder="hh:mm"></p-calendar>
                 <label for="date"><span class="required">*</span> :שעה</label>
             </div>
 
@@ -68,7 +68,7 @@
             </div>
 
             <div class="styleA">
-                <p-calendar [timeOnly]="true" (onSelect)="parseTime('start',$event)" placeholder="hh:mm"></p-calendar>
+                <p-calendar [timeOnly]="true" formControlName="DateEndHour" (onSelect)="parseTime('start',$event)" placeholder="hh:mm"></p-calendar>
                 <label for="dateEnd"> :שעה לא רלוונטי</label>
             </div>
             <div class="styleA">

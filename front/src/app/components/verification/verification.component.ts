@@ -30,7 +30,7 @@ export class VerificationComponent implements OnInit {
 
 
   StartTimer() {
-    const interval = setInterval(() => {
+    setInterval(() => {
       if (this.seconds > 0) {
         this.seconds--;
       }
@@ -40,10 +40,12 @@ export class VerificationComponent implements OnInit {
   async SendVerification(channel: string) {
     console.log(this.InpuForm);
 
-    this.formatPhoneNumber()
-    this.StartTimer()
+    this.formatPhoneNumber();
+    this.StartTimer();
+    this.seconds=35;
+   
     this.Channel = channel;
-    var result = await this._VerificationService.GetVerification(new VerificationDto(channel, this.InpuForm.Phone, this.InpuForm.NameOrg));
+     await this._VerificationService.GetVerification(new VerificationDto(channel, this.InpuForm.Phone, this.InpuForm.NameOrg));
   }
 
   async checkCode() {

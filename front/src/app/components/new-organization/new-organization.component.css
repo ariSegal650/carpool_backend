@@ -27,8 +27,15 @@
     grid-template-columns: 2fr 1fr;
      justify-items: end;
 }
-.image{
+.Image{
     display: flex;
+    justify-content: space-between;
+
+}
+img{
+    max-width: 100px;
+     max-height: 300px;
+     border-radius: 15px;
 }
 .required{
     color: red;
@@ -36,4 +43,7 @@
 h4{
     justify-self: center;
     text-align: center;
+}
+input{
+    direction: rtl;
 }

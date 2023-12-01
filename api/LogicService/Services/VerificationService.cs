@@ -1,7 +1,6 @@
 ﻿using LogicService.Dto;
 using Microsoft.Extensions.Configuration;
 using Twilio;
-using Twilio.Jwt.AccessToken;
 using Twilio.Rest.Verify.V2.Service;
 
 namespace LogicService.Services
@@ -70,9 +69,11 @@ namespace LogicService.Services
                         if (admin != null)
                         {
                             admin.Confirmed = true;
+                          
+
                             var a = _tokenService.GenerateJwtToken(organization.Id, admin.Phone, admin.Role);
                             return new OrgResponseDto(true, "approved", requst.Phone, a);
-                            
+
                         }
                     }
                 }
@@ -84,7 +85,7 @@ namespace LogicService.Services
             }
             catch (Exception)
             {
-              
+
             }
             return new OrgResponseDto(false, "קרתה שגיאה");
 

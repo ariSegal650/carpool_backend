@@ -47,9 +47,9 @@ namespace LogicService.Services
             if (nameOrg == null || adminPhone == null) return null;
 
              adminPhone = Regex.Replace(adminPhone, @"\s+", " ");
-             nameOrg = Regex.Replace(nameOrg, @"\s+", " ").ToLower();
-
-             var filter = Builders<OrganizationInfoEO>.Filter.And(
+             nameOrg = Regex.Replace(nameOrg, @"\s+", " ").Trim().ToLower();
+            
+            var filter = Builders<OrganizationInfoEO>.Filter.And(
              Builders<OrganizationInfoEO>.Filter.Eq(org => org.Name, nameOrg),
              Builders<OrganizationInfoEO>.Filter.ElemMatch(org => org.Admins, admin => admin.Phone == adminPhone));
 

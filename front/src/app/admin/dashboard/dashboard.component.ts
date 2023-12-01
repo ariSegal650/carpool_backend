@@ -19,7 +19,14 @@ export class DashboardComponent implements OnInit {
     private _messegeService: MessageServiceClient) { }
 
   ngOnInit(): void {
+    this.ReloadTheRequests();
+  }
 
+  addTask() {
+    this.showRequstComponent = !this.showRequstComponent;
+  }
+
+  ReloadTheRequests() {
     this._messegeService.showLoading();
     this._dataservice.getAllRequsr().subscribe(
       res => {
@@ -36,10 +43,6 @@ export class DashboardComponent implements OnInit {
         console.log(er);
       }
     );
-  }
-
-  addTask() {
-    this.showRequstComponent = !this.showRequstComponent;
   }
 
 

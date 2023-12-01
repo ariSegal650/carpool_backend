@@ -1,5 +1,5 @@
 <div class="form">
-    <form [formGroup]="organizationForm" (ngSubmit)="onSubmit()" >
+    <form [formGroup]="organizationForm" (ngSubmit)="onSubmit()">
 
         <h1>טופס רישום עמותות/ ארגונים</h1>
 
@@ -8,17 +8,23 @@
             <label for="name"><span class="required">*</span> :שם העמותה </label>
         </div>
 
-        <div class="styleA Image">
+        <div [ngClass]="{'Image': imageToShow}">
 
-            <p-fileUpload #fileUpload mode="basic" id="image" name="demo[]" accept="image/*" [maxFileSize]="1000000"
-                (onSelect)="onUploadImage($event)" [auto]="true"
-                invalidFileTypeMessageSummary="מותרת העלת קובץ תמונה בלבד" chooseLabel="בחר תמונת לוגו">
-            </p-fileUpload>
+            <div>
+                <img *ngIf="imageToShow" [src]="imageToShow" alt="Selected Image">
+            </div>
 
-            <label for="name"> :תמונת לוגו </label>
+            <div class="styleA">
+                <p-fileUpload #fileUpload mode="basic" id="image" name="demo[]" accept="image/*" [maxFileSize]="1000000" 
+                    [auto]="true"  
+                    invalidFileTypeMessageSummary="מותרת העלת קובץ תמונה בלבד" chooseLabel="בחר תמונת לוגו"
+                    (onSelect)="uploadFile($event?.currentFiles)">
+                </p-fileUpload>
+                <label for="name"> :תמונת לוגו </label>
+            </div>
 
-            <img *ngIf="imageToShow" [src]="imageToShow" alt="Selected Image"
-                style="max-width: 100px; max-height: 300px;">
+
+
         </div>
 
         <div class="styleA">

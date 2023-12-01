@@ -17,6 +17,11 @@ export class DataService {
     return this.http.post(this.baseUrl + "Organization", org);
   }
 
+  AddLogoImage(formData): Observable<any> {
+
+  return this.http.post(this.baseUrl + "Organization/upload", formData);
+  }
+
   BasikPostRequst(requestType, url, body) {
     this.http.post(this.baseUrl + url, body).subscribe({
       next: (value) => {
