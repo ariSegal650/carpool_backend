@@ -1,8 +1,6 @@
 
 
 using backend.Extensions;
-using LogicService.Profiles;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);

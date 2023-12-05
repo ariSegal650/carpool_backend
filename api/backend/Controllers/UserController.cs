@@ -1,7 +1,6 @@
 ﻿using LogicService.Dto;
 using LogicService.EO;
 using LogicService.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers

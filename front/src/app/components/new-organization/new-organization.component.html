@@ -18,7 +18,7 @@
                 <p-fileUpload #fileUpload mode="basic" id="image" name="demo[]" accept="image/*" [maxFileSize]="1000000" 
                     [auto]="true"  
                     invalidFileTypeMessageSummary="מותרת העלת קובץ תמונה בלבד" chooseLabel="בחר תמונת לוגו"
-                    (onSelect)="uploadFile($event?.currentFiles)">
+                    (onSelect)="onUploadImage($event)">
                 </p-fileUpload>
                 <label for="name"> :תמונת לוגו </label>
             </div>

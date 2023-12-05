@@ -46,48 +46,20 @@ export class NewOrganizationComponent implements OnInit {
     this.logoFile = eventImage.files[eventImage.files.length - 1];
     if (this.logoFile) {
       console.log(this.logoFile);
-      console.log(this.logoFile.type);
-
       
       const reader = new FileReader();
       reader.readAsDataURL(this.logoFile);
 
       reader.onload = (event) => {
         this.organizationForm.get('Logo')?.setValue(reader.result.toString());
+        console.log(this.organizationForm.get('Logo').value);
+        this.imageToShow = this.organizationForm.get('Logo').value;
 
-        this.imageToShow = event.target?.result;
       };
     }
     this.fileUpload.clear();
   }
 
-  uploadFile (images:File[])  {
-    console.log(images);
-    
-    if (images.length === 0) {
-      return;
-    }
-    
-    let fileToUpload = <File>images[0];
-    console.log(fileToUpload);
-    
-    const formData = new FormData();
-    formData.append('file', fileToUpload, fileToUpload.name);
-    console.log(formData);
-   
-   
-    this.data.AddLogoImage(fileToUpload).subscribe({
-      next:(value)=> {
-        console.log(value);
-        
-      },
-      error:(err)=> {
-        console.log(err);
-        
-      },
-    }
-    );
-  }
 
   onSubmit() {
     if (this.organizationForm.valid) {
@@ -110,7 +82,8 @@ export class NewOrganizationComponent implements OnInit {
         user
       );
 
-      this.VerificationForm = new Login(this.organizationForm.value.Name, this.organizationForm.get('Users').get('Phone').value)
+      this.VerificationForm = new Login(this.organizationForm.value.Name, this.organizationForm.get('Users').get('Phone').value);
+
       this._messegeService.showLoading();
 
       this.data.CreateNewOrganization(organization).subscribe({
@@ -136,6 +109,7 @@ export class NewOrganizationComponent implements OnInit {
   handleClose() {
     this.FormFiled = false;
   }
+  
   israeliPhoneValidator(control: AbstractControl): ValidationErrors | null {
     const isValid = /^(?:(?:(\+?972|\(\+?972\)|\+?\(972\))(?:\s|\.|-)?([1-9]\d?))|(0[23489]{1})|(0[57]{1}[0-9]))(?:\s|\.|-)?([^0\D]{1}\d{2}(?:\s|\.|-)?\d{4})$/.test(control.value);
 
