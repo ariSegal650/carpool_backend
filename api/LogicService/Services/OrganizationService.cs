@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using LogicService.Data;
+﻿using LogicService.Data;
 using LogicService.Dto;
 using LogicService.EO;
 using Microsoft.AspNetCore.Authorization;
@@ -24,9 +23,10 @@ namespace LogicService.Services
             {
                 org.Name = Regex.Replace(org.Name, @"\s+", " ").Trim().ToLower();
 
-                var Exists = _DataContexst._Organization.Find(o => o.Name == org.Name).Any();
+                var filter = Builders<OrganizationInfoEO>.Filter.Eq(o => o.Name, org.Name);
+                var exists = _DataContexst._Organization.Find(filter).Any();
 
-                if(Exists)
+                if (exists)
                 {
                     return new(false, "השם ארגון כבר קיים , אנא בחר שם אחר ");
                 }

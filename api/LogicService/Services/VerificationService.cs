@@ -11,14 +11,16 @@ namespace LogicService.Services
         private readonly IConfiguration _configuration;
         private readonly TokenService _tokenService;
         private readonly OrganizationService _OrganizationService;
-
+        private readonly UserService _UserService;
         public VerificationService(IConfiguration iconfiguration,
-         TokenService tokenService, OrganizationService organizationService)
+         TokenService tokenService, OrganizationService organizationService,
+         UserService UserService)
         {
             _configuration = iconfiguration;
             TwilioClient.Init(_configuration["accountSid"], _configuration["authToken"]);
             _tokenService = tokenService;
             _OrganizationService = organizationService;
+            _UserService = UserService;
         }
 
         public SimpelResponse GetVerification(VerificationRequstDto requst)
@@ -37,9 +39,9 @@ namespace LogicService.Services
                     return new(true, verification.DateCreated.ToString());
                 return new(false, verification.DateCreated.ToString());
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
+                
                 return new(false, "somthing went worng");
             }
 
@@ -90,5 +92,54 @@ namespace LogicService.Services
             return new OrgResponseDto(false, "קרתה שגיאה");
 
         }
-    }
+
+        public async Task<OrgResponseDto> ChecCodeUser(VerificationUserDto data)
+        {
+            var requst = data.requstData;
+            var userinfo = data.user;
+            try
+            {
+                requst.Phone = System.Text.RegularExpressions.Regex.Replace(requst.Phone, @"\s+", " ");
+
+                var verificationCheck = VerificationCheckResource.Create(
+                to: requst.Phone,
+                code: requst.Code,
+                pathServiceSid: _configuration["_pathServiceSid"]
+                 );
+
+                if (verificationCheck.Status == "approved")
+                {
+                    if(userinfo != null)
+                    {
+                       return await _UserService.CreateUser(userinfo);
+                    }
+
+                    var Exist = _UserService.CheckUserExist(requst.Phone);
+                    if (!Exist)
+                    {
+                        return new OrgResponseDto(false, "הרשם תחילה");
+
+                    }
+
+                    var a = _tokenService.GenerateJwtTokenUser(requst.Phone,"user");
+                        return new OrgResponseDto(true, "approved", requst.Phone, a);
+                 
+                    
+                }
+                else
+                {
+                    return new OrgResponseDto(false, "סיסמה לא נכונה");
+
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            return new OrgResponseDto(false, "קרתה שגיאה");
+
+        }
+
+    
+}
 }

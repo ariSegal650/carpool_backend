@@ -22,23 +22,32 @@ namespace backend.Controllers
             return Ok(_userService.GetUser(id));
         }
 
-        [HttpPost]
-        public IActionResult CreateUser([FromBody] UserInfoEO user)
-        {
-            var result = _userService.CreateUser(user).Result;
-            return result.sucsses ? NoContent() : BadRequest(result);
+        //[HttpPost]
+        //public IActionResult CreateUser([FromBody] UserInfoEO user)
+        //{
+        //    var result = _userService.CreateUser(user).Result;
+        //    return result.sucsses ? NoContent() : BadRequest(result);
 
-        }
+        //}
 
         [HttpPost("test")]
+        //[Authorize(Roles = "user")]
         public async Task<IActionResult> test([FromBody] UserLatLng coord)
         {
            var response=await _userService.GetDistanceAsync(coord);
 
             return Ok(response);
         }
+        //[HttpGet("test")]
+        ////[Authorize(Roles = "user")]
+        //public async Task<IActionResult> test1()
+        //{
+        //    var response = await _userService.test();
 
-        
+        //    return Ok(response);
+        //}
+
+
     }
 
 }

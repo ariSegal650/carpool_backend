@@ -34,9 +34,26 @@ namespace backend.Controllers
             return Ok(response);
         }
 
+        [HttpPost("CheckCode")]
+        public async Task<IActionResult> VerificationCheckUser([FromBody] VerificationUserDto requstDto)
+        {
+            var response = await _VerificationService.ChecCodeUser(requstDto);
+
+            if (!response.sucsses)
+                return BadRequest(response);
+            return Ok(response);
+        }
+
         [HttpGet]
-        [Authorize] 
+        [Authorize(Roles = "admin")]
         public IActionResult ValidateJwt()
+        {
+            return Ok(new { message = "JWT is valid" });
+        }
+
+        [HttpGet("ValidateJwt")]
+        [Authorize(Roles = "user")]
+        public IActionResult ValidateJwtUser()
         {
             return Ok(new { message = "JWT is valid" });
         }

@@ -42,5 +42,29 @@ namespace LogicService.Services
             return response;
         }
 
+        public string GenerateJwtTokenUser(string Phone, string role)
+        {
+
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new List<Claim>
+                {
+                  new Claim("MobilePhone", Phone),
+                  new Claim(ClaimTypes.Role, role),
+                }),
+                Expires = DateTime.Now.AddDays(15), // Set token expiration time
+                SigningCredentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var response = tokenHandler.WriteToken(token);
+            Console.WriteLine($"Generated Token: {response}");
+
+            return response;
+        }
+
     }
 }

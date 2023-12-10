@@ -18,7 +18,7 @@ namespace backend.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles ="admin")]
         public async Task<IActionResult> AddRequst([FromBody] RequstDto request)
         {
             //  JWT is stored in the HttpContext
@@ -32,7 +32,7 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAllTasks()
         {
             //  JWT is stored in the HttpContext

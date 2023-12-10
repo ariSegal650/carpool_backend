@@ -10,33 +10,37 @@ namespace LogicService.Services
     {
         private readonly DataContexst _DataContexst;
         private readonly IMapper _mapper;
+        private readonly TokenService _tokenService;
 
-        public UserService(DataContexst dataContexst, IMapper mapper)
+        public UserService(DataContexst dataContexst, IMapper mapper, TokenService tokenService)
         {
             _DataContexst = dataContexst;
             _mapper = mapper;
+            _tokenService = tokenService;
         }
 
-        public async Task<ErrorResponse> CreateUser(UserInfoEO user)
+        public async Task<OrgResponseDto> CreateUser(userSignInDto user)
         {
             if (CheckUserExist(user.Phone)) return new(false, "user Exist");
             try
             {
-                await _DataContexst._Users.InsertOneAsync(user);
-                 return new(true, "user created");
+                var userMapped = _mapper.Map<UserInfoEO>(user);
+                await _DataContexst._Users.InsertOneAsync(userMapped);
+                return new(true, "user created", "", _tokenService.GenerateJwtTokenUser(user.Phone, "user"));
             }
             catch (Exception e)
             {
-                await Console.Out.WriteLineAsync("UserService"+e);
-                 return new(false, "somthing went worng");
+                await Console.Out.WriteLineAsync("UserService" + e);
+                return new(false, "somthing went worng");
             }
         }
-        public UserInfoEO? GetUser(string id)
+
+        public UserInfoEO? GetUser(string phone)
         {
-            FilterDefinition<UserInfoEO> filter = Builders<UserInfoEO>.Filter.Eq("Id", id);
+            FilterDefinition<UserInfoEO> filter = Builders<UserInfoEO>.Filter.Eq("Phone", phone);
             try
             {
-                var user = (_DataContexst._Users.Find(filter).FirstOrDefault());
+                var user = _DataContexst._Users.Find(filter).FirstOrDefault();
                 return user;
             }
             catch (Exception)
@@ -68,14 +72,14 @@ namespace LogicService.Services
             {
                 return new List<RequstDto>();
             }
-                var requests = await collection.Find(_ => true).ToListAsync();
+            var requests = await collection.Find(_ => true).ToListAsync();
 
-                // Use a list instead of an array for dynamic sizing
-                List<RequstDto> sortedList = new List<RequstDto>();
+            // Use a list instead of an array for dynamic sizing
+            List<RequstDto> sortedList = new List<RequstDto>();
 
             foreach (var item in requests)
             {
-                double distance = CalculateDistance(coord.origin,new LatLng(item.Origin.Lat,item.Origin.Lng)) + CalculateDistance(coord.destination, new LatLng(item.Destination.Lat, item.Destination.Lng));
+                double distance = CalculateDistance(coord.origin, new LatLng(item.Origin.Lat, item.Origin.Lng)) + CalculateDistance(coord.destination, new LatLng(item.Destination.Lat, item.Destination.Lng));
 
                 if (sortedList.Count < 6 || distance < sortedList.Max(r => r.Distance))
                 {
@@ -94,8 +98,6 @@ namespace LogicService.Services
                     }
                 }
             }
-
-           
 
             return sortedList;
         }
@@ -125,7 +127,19 @@ namespace LogicService.Services
 
         private double trans(string str)
         {
-           return double.Parse(str);
+            return double.Parse(str);
         }
+
+        public async Task<List<Request>> test()
+        {
+            var collection = _DataContexst._requsts;
+
+            var a = await collection.Find(_ => true).ToListAsync();
+
+            return a;
+
+
+        }
+
     }
 }

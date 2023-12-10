@@ -28,7 +28,7 @@ namespace LogicService.EO
         public string Name { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public string Role { get; set; } = "User";
+        public string Role { get; set; } = "admin";
         public bool Confirmed { get; set; }
         
         internal Task<OrganizationAdmin> FirstOrDefaultAsync()
