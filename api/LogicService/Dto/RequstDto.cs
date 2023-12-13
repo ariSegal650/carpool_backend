@@ -1,4 +1,5 @@
-﻿using LogicService.EO;
+﻿
+using LogicService.EO;
 
 namespace LogicService.Dto
 {
@@ -12,11 +13,12 @@ namespace LogicService.Dto
         public string? CarSize { get; set; }
         public Place? Origin { get; set; }
         public Place? Destination { get; set; }
-        public DateTime? Date { get; set; }
+        public DateTime? Date { get; set; } 
         public DateTime? DateEnd { get; set; }
         public string? Phone_org { get; set; }
+        public OrganizationDto? Organization { get; set; }
         public double Distance { get; set; }
-        public OrganizationAdminDto? Admin { get; set; }
+        //public OrganizationAdminDto? Admin { get; set; }
         public bool? Executed { get; set; }
         public string? Id_User { get; set; }
         public DateTime? Executed_Time { get; set; }

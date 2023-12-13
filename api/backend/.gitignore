@@ -5,4 +5,7 @@ appsettings.json
 /obj
 /.vs
 
+/wwwroot
+/Properties*
+
 appsettings.json

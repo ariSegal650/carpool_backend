@@ -43,6 +43,8 @@ export class DashboardComponent implements OnInit {
         console.log(er);
       }
     );
+    console.log(this.tasks);
+    
   }
 
 

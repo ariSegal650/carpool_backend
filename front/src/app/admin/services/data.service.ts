@@ -9,7 +9,7 @@ import { RequestAdmin } from 'src/app/admin/models/request';
 })
 export class DataService {
 
-  private baseUrl = "https://localhost:7012/api/"
+  private baseUrl = "/api/"
 
   constructor(private http: HttpClient) { }
 

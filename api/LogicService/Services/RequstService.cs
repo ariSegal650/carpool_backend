@@ -20,7 +20,7 @@ namespace LogicService.Services
             _OrganizationService = organizationService;
         }
 
-        public async Task<SimpelResponse> AddReuqst(RequstDto request,string jwt)
+        public async Task<SimpelResponse> AddReuqst(RequstDto request, string jwt)
         {
             try
             {
@@ -29,27 +29,27 @@ namespace LogicService.Services
                 //get organizationId from jwt 
                 var handler = new JwtSecurityTokenHandler();
                 var jsonToken = handler.ReadToken(jwt) as JwtSecurityToken;
-                var organizationId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value ;
+                var organizationId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
                 var admin_phone = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "MobilePhone")?.Value;
-                
-                mapped.Id_Org = organizationId ?? "";
 
-                if(admin_phone == null || organizationId ==null) return new(false, "אירעה שגיעה");
+                // mapped.Id_Org = organizationId ?? "";
 
-                var Organization =await _OrganizationService.GetOrganizationById(admin_phone, organizationId);
-                if(Organization == null) return new(false, "אירעה שגיעה");
+                if (admin_phone == null || organizationId == null) return new(false, "אירעה שגיעה");
 
-                var admin =await _OrganizationService.GetAdmin(Organization,admin_phone);
-                if(admin == null) return new(false, "אירעה שגיעה"); ;
+                var Organization = await _OrganizationService.GetOrganizationById(admin_phone, organizationId);
+                if (Organization == null) return new(false, "אירעה שגיעה");
+                mapped.Organization = _mapper.Map<OrganizationDto>(Organization);
 
-                mapped.Admin = _mapper.Map<OrganizationAdminDto>(admin);
+                var admin = await _OrganizationService.GetAdmin(Organization, admin_phone);
+                if (admin == null) return new(false, "אירעה שגיעה");
+                mapped.Organization.admin = _mapper.Map<OrganizationAdminDto>(admin);
 
                 await _DataContexst._requsts.InsertOneAsync(mapped);
-                return new(true, "הבקשה נוספה בהצלחה"); 
+                return new(true, "הבקשה נוספה בהצלחה");
             }
             catch (Exception)
             {
-                return new(false, "אירעה שגיעה"); 
+                return new(false, "אירעה שגיעה");
             }
         }
 
@@ -65,7 +65,7 @@ namespace LogicService.Services
                 return null;
             }
 
-            var filter = Builders<Request>.Filter.Eq(req => req.Id_Org, organizationId);
+            var filter = Builders<Request>.Filter.Eq(req => req.Organization!.Id, organizationId);
             var request = await _DataContexst._requsts.Find(filter).ToListAsync();
 
             return request;

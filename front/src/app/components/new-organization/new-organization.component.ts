@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { FileSelectEvent, UploadEvent } from 'primeng/fileupload';
+import { FileSelectEvent } from 'primeng/fileupload';
 import { Login } from 'src/app/models/Verification';
 import { OrganizationInfoDto, OrganizationUser } from 'src/app/models/organization';
 import { DataService } from 'src/app/services/data.service';

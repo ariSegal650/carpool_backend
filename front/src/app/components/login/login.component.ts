@@ -1,7 +1,6 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { VerificationDto } from 'src/app/models/Verification';
 import { MessageServiceClient } from 'src/app/services/message-service-client.service';
 import { VerificationService } from 'src/app/services/verification.service';
 
@@ -13,6 +12,7 @@ import { VerificationService } from 'src/app/services/verification.service';
 export class LoginComponent implements OnInit {
   LoginForm: FormGroup
   Sended: boolean;
+  private static hasNavigatedToAdmin = false;
 
   constructor(
     private _verificationService: VerificationService,
@@ -21,8 +21,12 @@ export class LoginComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
-    this.router.navigate(['admin'])
+  ngOnInit(): void {    
+    if (!LoginComponent.hasNavigatedToAdmin) {
+      LoginComponent.hasNavigatedToAdmin= true;
+      this.router.navigate(['admin']);
+    }
+
     this.LoginForm = new FormGroup({
       NameOrg: new FormControl('', Validators.required),
       Phone: new FormControl('', [Validators.required, Validators.minLength(8)]),
@@ -31,7 +35,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.Sended = false;
-    
+
     if (!this.LoginForm.valid) {
       this._messegeService.showError("חובה למלא את כל הפרטים");
       return;
@@ -43,6 +47,4 @@ export class LoginComponent implements OnInit {
   handleClose() {
     this.Sended = false;
   }
-
-
 }

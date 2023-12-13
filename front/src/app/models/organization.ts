@@ -2,12 +2,15 @@
 
 
 export class OrganizationInfoDto {
+  public id?:string;
   public Name: string;
-  public Logo: string | null = null;
-  public Phone: string | null = null;
-  public Email: string | null = null;
-  public Website: string | null = null;
+  public Logo?: string;
+  public Phone?: string;
+  public Email?: string;
+  public Website?: string;
+
   public admin: OrganizationUser | null;
+
   constructor(
     Name: string,
     Logo: string,

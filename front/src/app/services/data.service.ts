@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { OrganizationInfoDto } from '../models/organization';
 import { Observable } from 'rxjs';
-import { VerificationDto } from '../models/Verification';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
-  private baseUrl = "https://localhost:7012/api/"
+  private baseUrl = "/api/"
   constructor(private http: HttpClient) { }
 
   CreateNewOrganization(org: OrganizationInfoDto): Observable<any> {

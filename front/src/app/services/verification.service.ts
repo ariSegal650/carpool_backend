@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 import { VerificationDto } from '../models/Verification';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VerificationService {
 
-  private baseUrl = "https://localhost:7012/api/"
+  private baseUrl = "/api/"
 
   constructor(private http: HttpClient) { }
 

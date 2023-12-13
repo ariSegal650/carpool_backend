@@ -1,4 +1,5 @@
-﻿using LogicService.Data;
+﻿using AutoMapper;
+using LogicService.Data;
 using LogicService.Dto;
 using LogicService.EO;
 using Microsoft.AspNetCore.Authorization;
@@ -11,10 +12,11 @@ namespace LogicService.Services
     public class OrganizationService
     {
         private readonly DataContexst _DataContexst;
-
-        public OrganizationService(DataContexst dataContexst)
+        private readonly IMapper _mapper;
+        public OrganizationService(DataContexst dataContexst, IMapper mapper)
         {
             _DataContexst = dataContexst;
+            _mapper = mapper;
         }
 
         public async Task<SimpelResponse> CreateOrganization(OrganizationDto org)
@@ -30,8 +32,11 @@ namespace LogicService.Services
                 {
                     return new(false, "השם ארגון כבר קיים , אנא בחר שם אחר ");
                 }
-
-                await _DataContexst._Organization.InsertOneAsync(org.convertToEo());
+                
+                var mapped = _mapper.Map<OrganizationInfoEO>(org);
+                mapped.Admins.Add(_mapper.Map<OrganizationAdmin>(org.admin));
+                await _DataContexst._Organization.InsertOneAsync(mapped);
+                
                 return new(true, "העמותה נוצרה בהצלחה"); ;
             }
             catch (Exception e)
@@ -46,9 +51,9 @@ namespace LogicService.Services
 
             if (nameOrg == null || adminPhone == null) return null;
 
-             adminPhone = Regex.Replace(adminPhone, @"\s+", " ");
-             nameOrg = Regex.Replace(nameOrg, @"\s+", " ").Trim().ToLower();
-            
+            adminPhone = Regex.Replace(adminPhone, @"\s+", " ");
+            nameOrg = Regex.Replace(nameOrg, @"\s+", " ").Trim().ToLower();
+
             var filter = Builders<OrganizationInfoEO>.Filter.And(
              Builders<OrganizationInfoEO>.Filter.Eq(org => org.Name, nameOrg),
              Builders<OrganizationInfoEO>.Filter.ElemMatch(org => org.Admins, admin => admin.Phone == adminPhone));

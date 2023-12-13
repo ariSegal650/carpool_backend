@@ -1,7 +1,5 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -29,8 +27,8 @@ namespace LogicService.Services
                   new Claim("MobilePhone", adminPhone),
                   new Claim(ClaimTypes.Role, role),
                 }),
-                Expires = DateTime.Now.AddDays(15), // Set token expiration time
-                SigningCredentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256Signature)
+                Expires = DateTime.Now.AddDays(15), 
+                SigningCredentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256)
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -44,7 +42,6 @@ namespace LogicService.Services
 
         public string GenerateJwtTokenUser(string Phone, string role)
         {
-
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

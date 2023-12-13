@@ -10,9 +10,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// add cors 
-builder.Services.AddCors();
 
+// builder.Services.AddControllersWithViews();
+// Add CORS
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -23,22 +24,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-
+// Add CORS before other middleware
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
+app.UseHttpsRedirection();
+
+// Use default files middleware
 app.UseDefaultFiles();
 app.UseStaticFiles();
-// app.UseStaticFiles(new StaticFileOptions
-// {
-//     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
-//     RequestPath = new PathString("/Resources")
-// });
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapFallbackToController("index", "Fallback");
 
 app.Run();

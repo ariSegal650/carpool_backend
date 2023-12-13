@@ -1,7 +1,7 @@
 ﻿
 namespace LogicService.Dto
 {
-    public class OrganizationAdminDto
+    public class OrganizationAdminDto  
     {
         public string Name { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;

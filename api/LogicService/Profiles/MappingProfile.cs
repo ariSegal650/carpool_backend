@@ -9,12 +9,11 @@ namespace LogicService.Profiles
     {
         public MappingProfile()
         {
-           
             CreateMap<Request, RequstDto>().ReverseMap();
 
             CreateMap<OrganizationAdmin, OrganizationAdminDto>().ReverseMap();
 
-            CreateMap<OrganizationDto, OrganizationInfoEO>().ForMember(dest => dest.Secret, opt => opt.Ignore()).ReverseMap();
+            CreateMap<OrganizationDto, OrganizationInfoEO>().ReverseMap();
 
             CreateMap<UserInfoEO, userSignInDto>().ReverseMap();
         }

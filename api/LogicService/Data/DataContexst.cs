@@ -14,19 +14,40 @@ namespace LogicService.Data
         public DataContexst()
         {
 
-            //MongoClient client = new MongoClient("mongodb://backend-mongo-1:27017");
+            try
+            {
 
-            MongoClient client = new MongoClient("mongodb://mongodb:27017");
-            Console.WriteLine("Connected to MongoDB1!");
+                var settings = MongoClientSettings.FromConnectionString(connectionUri);
 
-            IMongoDatabase database = client.GetDatabase("carpool");
+                // Set the ServerApi field of the settings object to Stable API version 1
+                settings.ServerApi = new ServerApi(ServerApiVersion.V1);
 
-            _Organization = database.GetCollection<OrganizationInfoEO>("organization");
-            _Users = database.GetCollection<UserInfoEO>("users");
-            _requsts = database.GetCollection<Request>("requsts");
+                // Create a new client and connect to the server
+                var client = new MongoClient(settings);
 
-            Console.WriteLine("Connected to MongoDB!");
+
+                // MongoClient client = new MongoClient("mongodb://localhost:27017");
+
+                // MongoClient client = new MongoClient("mongodb://mongodb:27017");
+                Console.WriteLine("Connected to MongoDB1!");
+
+                IMongoDatabase database = client.GetDatabase("carpool");
+
+                _Organization = database.GetCollection<OrganizationInfoEO>("organization");
+                _Users = database.GetCollection<UserInfoEO>("users");
+                _requsts = database.GetCollection<Request>("requsts");
+
+                Console.WriteLine("Connected to MongoDB!");
+            }
+            catch (System.Exception e)
+            {
+                System.Console.WriteLine(e);
+                throw;
+            }
+
         }
 
     }
 }
+
+

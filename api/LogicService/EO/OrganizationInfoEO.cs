@@ -7,7 +7,7 @@ namespace LogicService.EO
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string? Id { get; set; }
+        public string Id { get; set; }=string.Empty;
         public string Name { get; set; } = string.Empty;
         public string? Logo { get; set; } = string.Empty;
         public string? Phone { get; set; }
@@ -18,8 +18,7 @@ namespace LogicService.EO
 
         [BsonElement("admins")]
         [JsonPropertyName("admins")]
-        public List<OrganizationAdmin>? Admins { get; set; }
-
+        public List<OrganizationAdmin> Admins { get; set; }=new List<OrganizationAdmin>();
     }
 
     public class OrganizationAdmin
@@ -31,10 +30,6 @@ namespace LogicService.EO
         public string Role { get; set; } = "admin";
         public bool Confirmed { get; set; }
         
-        internal Task<OrganizationAdmin> FirstOrDefaultAsync()
-        {
-            throw new NotImplementedException();
-        }
     }
 
 }

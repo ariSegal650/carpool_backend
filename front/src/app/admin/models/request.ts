@@ -1,3 +1,5 @@
+import { OrganizationInfoDto } from "src/app/models/organization";
+
 export class RequestAdmin {
     Id?: string;
     Name?: string;
@@ -10,11 +12,11 @@ export class RequestAdmin {
     Date?: Date=null;
     DateEnd?: Date;
     Phone_org?: string;
-    Admin?:OrganizationAdmin;
     Executed?: boolean;
     Id_User?: string;
     Executed_Time?: Date;
     Notes?: string;
+    // organization:OrganizationInfoDto;
 }
 export class OrganizationAdmin {
     Name: string = '';
