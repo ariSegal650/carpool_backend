@@ -20,34 +20,31 @@
             </div>
 
             <div class="styleA">
-                <p-dropdown [options]="typeTask" optionLabel="name" formControlName="Type" [showClear]=true
-                    placeholder="בחר סוג משימה ">
+                <p-dropdown formControlName="Type" [options]="typeTask" optionLabel="name" [placeholder]="SelectTypeT">
                 </p-dropdown>
-
                 <label for="type"><span class="required">*</span> :סוג משימה</label>
             </div>
 
             <div class="styleA"
-                [ngClass]="{'disabled': requestForm.get('Type').pristine || requestForm.get('Type').value == null || (requestForm.get('Type').value?.code != 1 && requestForm.get('Type').value !== null)}">
+                [ngClass]="{'disabled': requestForm.get('Type').value == null || (requestForm.get('Type').value?.code != 1 && requestForm.get('Type').value !== null)}">
                 <p-inputNumber formControlName="Count" inputId="minmax" [min]="0" [max]="10"> </p-inputNumber>
                 <label for="count"> :כמות אנשים </label>
             </div>
 
             <div class="styleA"
-                [ngClass]="{'disabled': requestForm.get('Type').pristine || requestForm.get('Type').value == null || (requestForm.get('Type').value?.code != 2 && requestForm.get('Type').value !== null)}">
-                <p-dropdown [options]="CarSize" formControlName="CarSize" optionLabel="name" [showClear]=true
-                    placeholder="גודל רכב">
+                [ngClass]="{'disabled': requestForm.get('Type').value == null || (requestForm.get('Type').value?.code != 2 && requestForm.get('Type').value !== null)}">
+                <p-dropdown formControlName="CarSize" [options]="CarSize" optionLabel="name" [placeholder]="CarSizeT">
                 </p-dropdown>
                 <label for="carSize"> :גודל רכב למשלוחים </label>
             </div>
-            <div class="styleA">
-                <input type="text" #origin formControlName="Origin" pInputText />
-                <label for="origin"><span class="required">*</span> :מוצא</label>
 
+            <div class="styleA">
+                <input type="text" #origin formControlName="Origin" pInputText [placeholder]="originT"/>
+                <label for="origin"><span class="required">*</span> :מוצא</label>
             </div>
 
             <div class="styleA">
-                <input type="text" #destination formControlName="Destination" pInputText />
+                <input type="text" #destination formControlName="Destination" pInputText [placeholder]="destinationT"/>
                 <label for="destination"><span class="required">*</span> :יעד</label>
             </div>
 
@@ -57,7 +54,8 @@
             </div>
 
             <div class="styleA">
-                <p-calendar [timeOnly]="true" (onSelect)="parseTime('start',$event)" formControlName="DateHour" placeholder="hh:mm"></p-calendar>
+                <p-calendar [timeOnly]="true" (onSelect)="parseTime('start',$event)" formControlName="DateHour"
+                    placeholder="hh:mm"></p-calendar>
                 <label for="date"><span class="required">*</span> :שעה</label>
             </div>
 
@@ -68,7 +66,8 @@
             </div>
 
             <div class="styleA">
-                <p-calendar [timeOnly]="true" formControlName="DateEndHour" (onSelect)="parseTime('start',$event)" placeholder="hh:mm"></p-calendar>
+                <p-calendar [timeOnly]="true" formControlName="DateEndHour" (onSelect)="parseTime('End',$event)"
+                    placeholder="hh:mm"></p-calendar>
                 <label for="dateEnd"> :שעה לא רלוונטי</label>
             </div>
             <div class="styleA">

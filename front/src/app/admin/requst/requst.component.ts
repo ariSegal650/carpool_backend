@@ -5,7 +5,7 @@ import { DataService } from '../services/data.service';
 import { } from "googlemaps";
 import { MessageServiceClient } from 'src/app/services/message-service-client.service';
 
-interface dropDown {
+class dropDown {
   name: string;
   code: number;
 }
@@ -24,15 +24,19 @@ export class RequstComponent implements OnInit {
   originResult: Place;
   destinationResult: Place;
 
-  // DateStart: Date = new Date();
-  // DateEnd: Date = new Date();
-  // startTime:  Date = new Date();
+  SelectTypeT: string = "בחר סוג משימה";
+  CarSizeT: string = "גודל רכב";
+  destinationT = "הזנת מיקום";
+  originT = "הזנת מיקום";
+
   requestForm: FormGroup;
-  genders: dropDown[] | undefined;
+  genders: dropDown[] = [];
   typeTask: dropDown[] = [];
   CarSize: dropDown[] = [];
 
   @Input() running_over: boolean = false;
+  @Input() taskEdit: RequestAdmin;
+
   @Output() onClose: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() RequstSended: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -41,25 +45,6 @@ export class RequstComponent implements OnInit {
     private _messegeService: MessageServiceClient) { }
 
   ngOnInit(): void {
-
-    const currentDatePlus24Hours = new Date();
-    currentDatePlus24Hours.setHours(currentDatePlus24Hours.getHours() + 5);
-
-    this.requestForm = new FormGroup({
-      Name: new FormControl('', Validators.required),
-      Phone: new FormControl('',[Validators.required, this.israeliPhoneValidator.bind(this)]),
-      Type: new FormControl(null, Validators.required),
-      Count: new FormControl(0, Validators.required),
-      CarSize: new FormControl(''),
-      Origin: new FormControl('', Validators.required),
-      Destination: new FormControl('', Validators.required),
-      Date: new FormControl(new Date(), [Validators.required]),
-      DateHour:new FormControl(new Date(), [Validators.required]),
-      DateEnd: new FormControl((new Date()) ,Validators.required),
-      DateEndHour: new FormControl(currentDatePlus24Hours ,Validators.required),
-      Phone_org: new FormControl(''),
-      Notes: new FormControl('')
-    });
 
     this.genders = [
       { name: 'זכר', code: 1 },
@@ -80,6 +65,65 @@ export class RequstComponent implements OnInit {
 
     ];
 
+    if (this.taskEdit != null) {
+      this.initializeRequst();
+      return;
+    }
+    const currentDatePlus24Hours = new Date();
+    currentDatePlus24Hours.setHours(currentDatePlus24Hours.getHours() + 5);
+
+    this.requestForm = new FormGroup({
+      Name: new FormControl('', Validators.required),
+      Phone: new FormControl('', [Validators.required, this.israeliPhoneValidator.bind(this)]),
+      Type: new FormControl(null, Validators.required),
+      Count: new FormControl(0, Validators.required),
+      CarSize: new FormControl(''),
+      Origin: new FormControl('', Validators.required),
+      Destination: new FormControl('', Validators.required),
+      Date: new FormControl(new Date(), [Validators.required]),
+      DateHour: new FormControl(new Date(), [Validators.required]),
+      DateEnd: new FormControl(currentDatePlus24Hours, Validators.required),
+      DateEndHour: new FormControl(currentDatePlus24Hours, Validators.required),
+      Phone_org: new FormControl(''),
+      Notes: new FormControl('')
+    });
+
+
+  }
+
+  initializeRequst() {
+    this.requestForm = new FormGroup({
+      Name: new FormControl(this.taskEdit.name, Validators.required),
+      Phone: new FormControl(this.taskEdit.phone, [Validators.required, this.israeliPhoneValidator.bind(this)]),
+      Type: new FormControl(Validators.required),
+      Count: new FormControl(this.taskEdit.count, Validators.required),
+      CarSize: new FormControl(),
+      Origin: new FormControl(this.taskEdit.origin.name, Validators.required),
+      Destination: new FormControl(this.taskEdit.destination.name, Validators.required),
+      Date: new FormControl(this.getDate(this.taskEdit.date.toString()), [Validators.required]),
+      DateHour: new FormControl(this.getDate(this.taskEdit.date.toString()), [Validators.required]),
+      DateEnd: new FormControl(this.getDate(this.taskEdit.dateEnd.toString()), Validators.required),
+      DateEndHour: new FormControl(this.getDate(this.taskEdit.dateEnd.toString()), Validators.required),
+      Phone_org: new FormControl(this.taskEdit.phone_org),
+      Notes: new FormControl(this.taskEdit.notes)
+    });
+
+    const selectedType = this.typeTask.find(type => type.name === this.taskEdit.type);
+    this.requestForm.get("Type").setValue(selectedType);
+    this.SelectTypeT = this.taskEdit.type;
+    this.CarSizeT = this.taskEdit.carSize;
+
+    if (this.taskEdit.carSize != null) {
+      const selectedCarSize = this.CarSize.find(car => car.name === this.taskEdit.carSize);
+      this.requestForm.get("CarSize").setValue(selectedCarSize);
+      console.log(selectedCarSize);
+    }
+
+    this.originT = this.taskEdit.origin.name ?? "55";
+    this.destinationT = this.taskEdit.destination.name;
+
+
+
   }
 
   onSubmit() {
@@ -91,21 +135,20 @@ export class RequstComponent implements OnInit {
     };
 
     const request: RequestAdmin = {
-      Name: this.requestForm.value.Name,
-      Phone: this.requestForm.value.Phone,
-      Type: this.requestForm.value.Type.name,
-      Count: this.requestForm.value.Count,
-      CarSize: this.requestForm.value.CarSize.name,
-      Origin: this.originResult,
-      Destination: this.destinationResult,
-      Date: this.requestForm.value.Date,
-      DateEnd: this.requestForm.value.DateEnd,
-      Phone_org: this.requestForm.value.Phone_org,
-      Executed_Time: this.requestForm.value.Executed_Time,
-      Notes: this.requestForm.value.Notes
+      id:this.taskEdit?.id,
+      name: this.requestForm.value.Name,
+      phone: this.requestForm.value.Phone,
+      type: this.requestForm.value.Type.name,
+      count: this.requestForm.value.Count,
+      carSize: this.requestForm.value.CarSize?.name,
+      origin: this.originResult ?? this.taskEdit.origin,
+      destination: this.destinationResult ??this.taskEdit.destination,
+      date: this.requestForm.value.Date,
+      dateEnd: this.requestForm.value.DateEnd,
+      phone_org: this.requestForm.value.Phone_org,
+      executed_Time: this.requestForm.value.Executed_Time,
+      notes: this.requestForm.value.Notes
     };
-    console.log(request);
-
     this._messegeService.showLoading();
 
     this.dataService.addReqqust(request).subscribe(
@@ -129,12 +172,16 @@ export class RequstComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.getPlaceAutocomplete(this.destination,"destination" );
-    this.getPlaceAutocomplete(this.origin,"origin" );
+    this.getPlaceAutocomplete(this.destination, "destination");
+    this.getPlaceAutocomplete(this.origin, "origin");
   }
 
+  getDate(dateString: string): Date {
+    return new Date(dateString);
+  }
 
-  parseTime(StartOrEnd: string, event: Date) {
+  parseTime(StartOrEnd: string, event: any) {
+
     if (StartOrEnd == "start") {
 
       var date1: Date;
@@ -153,11 +200,11 @@ export class RequstComponent implements OnInit {
   }
 
 
-  private getPlaceAutocomplete(htmlElemnt, direction:string) {
+  private getPlaceAutocomplete(htmlElemnt, direction: string) {
 
     const autocomplete = new google.maps.places.Autocomplete(htmlElemnt.nativeElement, {
       componentRestrictions: { country: 'il' },
-      types: ['geocode','establishment'],
+      types: ['geocode', 'establishment'],
       fields: ['name', 'geometry', 'address_components',]
     });
 
@@ -196,24 +243,17 @@ export class RequstComponent implements OnInit {
       const latitude = place.geometry.location.lat();
       const longitude = place.geometry.location.lng();
 
-      // console.log('Street Name:', streetName);
-      // console.log('Street Number:', streetNumber);
-      // console.log('Building Name:', buildingName);
-      // console.log('City:', city);
-      // console.log('Latitude:', latitude);
-      // console.log('Longitude:', longitude);
-     
-
-      if(direction=="origin"){
+      if (direction == "origin") {
         this.originResult = new Place("", city, latitude.toString(), longitude.toString());
-        this.originResult.Name = streetName + streetNumber + buildingName + city
+        this.originResult.name = streetName + streetNumber + buildingName + city
       }
-      else{
+      else {
         this.destinationResult = new Place("", city, latitude.toString(), longitude.toString());
-        this.destinationResult.Name = streetName + streetNumber + buildingName + city
+        this.destinationResult.name = streetName + streetNumber + buildingName + city
       }
     });
   };
+
   israeliPhoneValidator(control: AbstractControl): ValidationErrors | null {
     const isValid = /^(?:(?:(\+?972|\(\+?972\)|\+?\(972\))(?:\s|\.|-)?([1-9]\d?))|(0[23489]{1})|(0[57]{1}[0-9]))(?:\s|\.|-)?([^0\D]{1}\d{2}(?:\s|\.|-)?\d{4})$/.test(control.value);
 

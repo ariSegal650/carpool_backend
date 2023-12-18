@@ -3,11 +3,11 @@
 
 export class OrganizationInfoDto {
   public id?:string;
-  public Name: string;
-  public Logo?: string;
-  public Phone?: string;
-  public Email?: string;
-  public Website?: string;
+  public name: string;
+  public logo?: string;
+  public phone?: string;
+  public email?: string;
+  public website?: string;
 
   public admin: OrganizationUser | null;
 
@@ -19,24 +19,24 @@ export class OrganizationInfoDto {
     Website: string,
     Users: OrganizationUser
   ) {
-    this.Name = Name;
-    this.Logo = Logo;
-    this.Phone = Phone;
-    this.Email = Email;
-    this.Website = Website;
+    this.name = Name;
+    this.logo = Logo;
+    this.phone = Phone;
+    this.email = Email;
+    this.website = Website;
     this.admin = Users;
   }
 }
 
 export class OrganizationUser {
-  public Name: string = '';
-  public Phone: string = '';
-  public Email: string = '';
-  public LevelAdmin?: number = 0;
+  public name: string = '';
+  public phone: string = '';
+  public email: string = '';
+  public levelAdmin?: number = 0;
 
   constructor(name: string, phone: string, email: string) {
-    this.Name = name;
-    this.Phone = phone;
-    this.Email = email;
+    this.name = name;
+    this.phone = phone;
+    this.email = email;
   }
 }

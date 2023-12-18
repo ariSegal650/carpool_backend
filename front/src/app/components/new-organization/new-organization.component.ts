@@ -54,7 +54,6 @@ export class NewOrganizationComponent implements OnInit {
         this.organizationForm.get('Logo')?.setValue(reader.result.toString());
         console.log(this.organizationForm.get('Logo').value);
         this.imageToShow = this.organizationForm.get('Logo').value;
-
       };
     }
     this.fileUpload.clear();
