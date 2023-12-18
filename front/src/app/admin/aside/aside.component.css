@@ -1,0 +1,41 @@
+/* aside.component.css */
+
+
+.aside-container {
+    position: fixed;
+    top: 0;
+    left: initial;
+    right: -200px; /* Initial position for desktop view */
+    width: 200px;
+    height: 100%;
+    background-color: #f0f0f0;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Adjust shadow to the left side */
+    transition: right 0.3s ease;
+    z-index: 1;
+  }
+  
+  .aside-container.mobile-open {
+    right: 0;
+  }
+  
+  .toggle-button {
+    position: fixed;
+    top: 15px;
+    right: 15px; /* Adjust button to the right side */
+    font-size: 20px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+  }
+  
+  .aside-content {
+    padding: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    /* .aside-container {
+      right: 0; 
+    } */
+  }
+  

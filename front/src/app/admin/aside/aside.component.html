@@ -1,0 +1,14 @@
+
+<aside class="aside-container" [ngClass]="{ 'mobile-open': isMobileMenuOpen }">
+    <button class="toggle-button" (click)="toggleMobileMenu()">☰</button>
+    <div class="aside-content">
+        <!-- <h2>Aside Content</h2> -->
+        <ul>
+            <li *ngFor="let item of desktopMenuItems">
+                <h4><a [routerLink]="item.routerLink">{{item.label}}</a></h4>
+            </li>
+        </ul>
+    </div>
+</aside>
+
+<router-outlet></router-outlet>
