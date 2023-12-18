@@ -1,7 +1,9 @@
 ﻿using LogicService.Dto;
 using LogicService.EO;
 using LogicService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace backend.Controllers
 {
@@ -22,31 +24,26 @@ namespace backend.Controllers
             return Ok(_userService.GetUser(id));
         }
 
-        //[HttpPost]
-        //public IActionResult CreateUser([FromBody] UserInfoEO user)
-        //{
-        //    var result = _userService.CreateUser(user).Result;
-        //    return result.sucsses ? NoContent() : BadRequest(result);
 
-        //}
-
-        [HttpPost("test")]
-        //[Authorize(Roles = "user")]
+        [HttpPost("tasks")]
+        [Authorize(Roles = "user")]
         public async Task<IActionResult> test([FromBody] UserLatLng coord)
         {
            var response=await _userService.GetDistanceAsync(coord);
 
             return Ok(response);
         }
-        //[HttpGet("test")]
-        ////[Authorize(Roles = "user")]
-        //public async Task<IActionResult> test1()
-        //{
-        //    var response = await _userService.test();
 
-        //    return Ok(response);
-        //}
+        [HttpPost("task")]
+        [Authorize(Roles = "user")]
+        public async Task<IActionResult> ExecuteTask([FromBody] RequstDto task)
+        {
+            var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
+            var response = await _userService.CanExecuteTask(jwt,task);
+
+            return Ok(response);
+        }
 
     }
 

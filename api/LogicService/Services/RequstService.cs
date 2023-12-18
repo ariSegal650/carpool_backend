@@ -2,6 +2,7 @@
 using LogicService.Data;
 using LogicService.Dto;
 using LogicService.EO;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -32,7 +33,6 @@ namespace LogicService.Services
                 var organizationId = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "nameid")?.Value;
                 var admin_phone = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "MobilePhone")?.Value;
 
-                // mapped.Id_Org = organizationId ?? "";
 
                 if (admin_phone == null || organizationId == null) return new(false, "אירעה שגיעה");
 
@@ -42,7 +42,17 @@ namespace LogicService.Services
 
                 var admin = await _OrganizationService.GetAdmin(Organization, admin_phone);
                 if (admin == null) return new(false, "אירעה שגיעה");
+
                 mapped.Organization.admin = _mapper.Map<OrganizationAdminDto>(admin);
+                mapped.lastModified= DateTime.UtcNow;
+
+                if (mapped.Id != null)
+                {
+                    var filter = Builders<Request>.Filter.Eq(req => req.Id, mapped.Id);
+
+                    var result = _DataContexst._requsts.ReplaceOne(filter, mapped);
+                    return new(true, "הבקשה עודכנה בהצלחה");
+                }
 
                 await _DataContexst._requsts.InsertOneAsync(mapped);
                 return new(true, "הבקשה נוספה בהצלחה");
@@ -64,7 +74,6 @@ namespace LogicService.Services
             {
                 return null;
             }
-
             var filter = Builders<Request>.Filter.Eq(req => req.Organization!.Id, organizationId);
             var request = await _DataContexst._requsts.Find(filter).ToListAsync();
 

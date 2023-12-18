@@ -12,6 +12,7 @@ namespace LogicService.Services
         private readonly IMapper _mapper;
         private readonly TokenService _tokenService;
 
+
         public UserService(DataContexst dataContexst, IMapper mapper, TokenService tokenService)
         {
             _DataContexst = dataContexst;
@@ -64,6 +65,33 @@ namespace LogicService.Services
 
         }
 
+        public async Task<SimpelResponse> CanExecuteTask(string jwt, RequstDto task)
+        {
+            var userExists =  CheckUserExist(jwt);
+
+            if (!userExists)
+            {
+                return new SimpelResponse(false, "הלקוח לא נמצא");
+            }
+
+            var filter = Builders<Request>.Filter.Eq(r => r.Id, task.Id);
+            var existingTask = await _DataContexst._requsts.Find(filter).FirstOrDefaultAsync();
+
+            if (existingTask == null || existingTask.Executed || existingTask.lastModified != task.lastModified)
+            {
+                return new SimpelResponse(false, "המשימה נלקחה");
+            }
+
+            existingTask.Id_User = task.Id_User;
+            existingTask.Executed = true;
+            existingTask.Executed_Time = DateTime.Now;
+
+            await _DataContexst._requsts.ReplaceOneAsync(filter, existingTask);
+
+            return new SimpelResponse(true, "קיבלת את המשימה");
+        }
+
+
         public async Task<List<RequstDto>> GetDistanceAsync(UserLatLng coord)
         {
 
@@ -92,12 +120,15 @@ namespace LogicService.Services
                     sortedList = sortedList.OrderBy(r => r.Distance).ToList();
 
                     // If the list size exceeds 6, remove the last element (max distance)
-                    if (sortedList.Count > 6)
+                    if (sortedList.Count > 7)
                     {
                         sortedList.RemoveAt(sortedList.Count - 1);
                     }
                 }
             }
+            //var http =new HttpClient();
+            //string url = "https://api.geoapify.com/v1/routing?waypoints=${},35.2257626|31.6644874,34.5730157|32.0852997,34.7818064&mode=drive&lang=en&apiKey=YOUR_API_KEY\r\n";
+            //http.GetAsync(url).Wait();
 
             return sortedList;
         }
@@ -128,17 +159,6 @@ namespace LogicService.Services
         private double trans(string str)
         {
             return double.Parse(str);
-        }
-
-        public async Task<List<Request>> test()
-        {
-            var collection = _DataContexst._requsts;
-
-            var a = await collection.Find(_ => true).ToListAsync();
-
-            return a;
-
-
         }
 
     }

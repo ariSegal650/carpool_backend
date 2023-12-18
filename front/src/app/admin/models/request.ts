@@ -1,23 +1,24 @@
 import { OrganizationInfoDto } from "src/app/models/organization";
 
 export class RequestAdmin {
-    Id?: string;
-    Name?: string;
-    Phone?: string;
-    Type?: string;
-    Count: number=0;
-    CarSize?: string;
-    Origin?: Place;
-    Destination?: Place;
-    Date?: Date=null;
-    DateEnd?: Date;
-    Phone_org?: string;
-    Executed?: boolean;
-    Id_User?: string;
-    Executed_Time?: Date;
-    Notes?: string;
-    // organization:OrganizationInfoDto;
+    id?: string;
+    name?: string;
+    phone?: string;
+    type?: string;
+    count: number=0;
+    carSize?: string;
+    origin?: Place;
+    destination?: Place;
+    date?: Date=null;
+    dateEnd?: Date;
+    phone_org?: string;
+    executed?: boolean;
+    id_User?: string;
+    executed_Time?: Date;
+    notes?: string;
+    lastModified?:Date;
 }
+
 export class OrganizationAdmin {
     Name: string = '';
     Phone: string = '';
@@ -26,14 +27,14 @@ export class OrganizationAdmin {
 
 export class Place 
 {
-    Name:string="";
-    City:string="";
-    Lat:string="";
-    Lng:string="";
+    name:string="";
+    city:string="";
+    lat:string="";
+    lng:string="";
     constructor(name:string,city:string,_lat:string,_long:string){
-        this.Name=name;
-        this.City=city;
-        this.Lat=_lat;
-        this.Lng=_long;
+        this.name=name;
+        this.city=city;
+        this.lat=_lat;
+        this.lng=_long;
     }
 }
