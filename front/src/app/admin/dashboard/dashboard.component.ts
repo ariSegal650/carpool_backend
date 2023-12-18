@@ -13,6 +13,7 @@ export class DashboardComponent implements OnInit {
 
   tasks: RequestAdmin[] = []
   showRequstComponent: boolean = false;
+  taskEdit: RequestAdmin = null;
   @ViewChild('addresstext') addresstext: any;
 
   constructor(private _dataservice: DataService,
@@ -23,6 +24,19 @@ export class DashboardComponent implements OnInit {
   }
 
   addTask() {
+    this.taskEdit=null;
+    this.showRequstComponent = !this.showRequstComponent;
+  }
+
+  deleteRequst(task: RequestAdmin) {
+
+  }
+  editRequst(task: RequestAdmin) {
+    this.taskEdit = task;
+
+    console.log(this.taskEdit.name);
+    console.log(task);
+
     this.showRequstComponent = !this.showRequstComponent;
   }
 
@@ -31,20 +45,16 @@ export class DashboardComponent implements OnInit {
     this._dataservice.getAllRequsr().subscribe(
       res => {
         this._messegeService.hideLoading();
-
         this.tasks = res;
-        console.log(res);
-
       },
       er => {
         this._messegeService.hideLoading();
         this._messegeService.showError("something went wrong");
-
         console.log(er);
       }
     );
     console.log(this.tasks);
-    
+
   }
 
 

@@ -1,5 +1,4 @@
 ﻿using LogicService.Dto;
-using LogicService.EO;
 using LogicService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -9,21 +9,37 @@ import { CommonModule } from '@angular/common';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CheckboxModule } from 'primeng/checkbox';
+import { DateEndPipe } from './pipes/date-end.pipe';
+import { AsideComponent } from './aside/aside.component';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { OrganizationProfileComponent } from './organization-profile/organization-profile.component';
 
 const adminRoutes: Routes = [
 
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'request', component: RequstComponent },
-  { path: '', component: DashboardComponent },
+  {
+    path: '',
+    component: AsideComponent,
+    children: [
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'request', component: RequstComponent },
+      { path: 'profile', component: OrganizationProfileComponent },
+      { path: '', component: DashboardComponent },
+    ],
+  },
+
+
 ];
 
 @NgModule({
   declarations: [
     DashboardComponent,
     RequstComponent,
-    
+    DateEndPipe,
+    AsideComponent,
+    OrganizationProfileComponent,
   ],
   imports: [
+    TabMenuModule,
     SharedModule,
     TableModule,
     CalendarModule,
@@ -31,7 +47,7 @@ const adminRoutes: Routes = [
     InputNumberModule,
     InputTextareaModule,
     CheckboxModule,
-    RouterModule.forChild(adminRoutes)
+    RouterModule.forChild(adminRoutes),
   ],
   exports: [RouterModule]
 })

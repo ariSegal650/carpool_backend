@@ -1,0 +1,87 @@
+<div>
+    <div class="form" *ngIf="dataLoaded">
+
+        <form [formGroup]="organization" (ngSubmit)="onSubmit()">
+
+            <h1>עדכון פרמטרים </h1>
+    
+            <div class="styleA">
+                <input type="text" pInputText formControlName="Name" type="text" />
+                <label for="name"><span class="required">*</span> :שם העמותה </label>
+            </div>
+    
+            <div [ngClass]="{'Image': imageToShow}">
+    
+                <div>
+                    <img *ngIf="imageToShow" [src]="imageToShow" alt="Selected Image">
+                </div>
+    
+                <div class="styleA">
+                    <p-fileUpload #fileUpload mode="basic" id="image" name="demo[]" accept="image/*" [maxFileSize]="1000000" 
+                        [auto]="true"  
+                        invalidFileTypeMessageSummary="מותרת העלת קובץ תמונה בלבד" chooseLabel="בחר תמונת לוגו"
+                        (onSelect)="onUploadImage($event)">
+                    </p-fileUpload>
+                    <label for="name"> :תמונת לוגו </label>
+                </div>
+    
+    
+    
+            </div>
+    
+            <div class="styleA">
+                <input type="text" pInputText formControlName="Phone" type="tel" />
+                <label for="phone"> :מספר טלפון עמותה</label>
+            </div>
+            <div *ngIf=" organization.get('Phone')?.touched && organization.get('Phone')?.errors?.['israeliPhone']">
+                מספר פלאפון נדרש
+            </div>
+    
+            <div class="styleA">
+                <input type="text" pInputText formControlName="Email" formControlName="Email" type="email" />
+                <label for="email"> :מייל</label>
+            </div>
+            <div *ngIf=" organization.get('Email')?.touched && organization.get('Email')?.errors?.['email']">
+                אימייל לא תקין
+    
+            </div>
+    
+    
+            <div class="styleA">
+                <input type="text" pInputText formControlName="Website" type="url" />
+                <label for="website">:קישור לאתר</label>
+            </div>
+    
+            <div formGroupName="Users">
+                <h4>מנהל/ת ראשי <span><br>
+                        בהמשך יהיה אפשר להוסיף עוד מנהלים
+                    </span></h4>
+    
+                <div class="styleA">
+                    <input type="text" pInputText formControlName="Name" />
+                    <label for="name"><span class="required">*</span> :שם מלא </label>
+                </div>
+                <div class="styleA">
+                    <input type="text" pInputText formControlName="Phone" type="tel" />
+                    <label for="phone"><span class="required">*</span> :מספר פלאפון</label>
+                </div>
+                <div
+                    *ngIf=" organization.get('Phone')?.touched && organization.get('Phone')?.errors?.['israeliPhone']">
+                    מספר פלאפון נדרש
+    
+                </div>
+                <div class="styleA">
+                    <input type="text" pInputText formControlName="Email" formControlName="Email" type="email" />
+                    <label for="email"><span class="required">*</span> :מייל</label>
+                </div>
+                <div *ngIf=" organization.get('Email')?.touched && organization.get('Email')?.errors?.['email']">
+                    אימייל לא תקין
+    
+                </div>
+            </div>
+            <button type="submit" pButton label="Submit"></button>
+        </form>
+
+
+    </div>
+</div>

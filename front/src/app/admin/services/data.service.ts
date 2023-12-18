@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RequestAdmin } from 'src/app/admin/models/request';
+import { OrganizationInfoDto } from 'src/app/models/organization';
 
 
 @Injectable({
@@ -9,7 +10,7 @@ import { RequestAdmin } from 'src/app/admin/models/request';
 })
 export class DataService {
 
-  private baseUrl = "/api/"
+  private baseUrl = " https://localhost:7012/api/"
 
   constructor(private http: HttpClient) { }
 
@@ -25,5 +26,19 @@ export class DataService {
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
     return this.http.post<any>(this.baseUrl + "Requst",requestAdmin, { headers });
+  }
+
+  getOrganization(){
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+    return this.http.get<OrganizationInfoDto>(this.baseUrl + "Organization", { headers });
+  }
+  
+  updateOrganization(org:OrganizationInfoDto ){
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+    return this.http.put<OrganizationInfoDto>(this.baseUrl + "Organization",org, { headers });
   }
 }
