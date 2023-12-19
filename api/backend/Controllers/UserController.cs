@@ -42,7 +42,9 @@ namespace backend.Controllers
 
             var response = await _userService.CanExecuteTask(jwt,task);
 
-            return Ok(response);
+            if (response.sucsses)
+                return Ok(response);
+            return BadRequest(response);
         }
 
     }

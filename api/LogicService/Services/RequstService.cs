@@ -44,7 +44,7 @@ namespace LogicService.Services
                 if (admin == null) return new(false, "אירעה שגיעה");
 
                 mapped.Organization.admin = _mapper.Map<OrganizationAdminDto>(admin);
-                mapped.lastModified= DateTime.UtcNow;
+                mapped.lastModified= DateTime.Now;
 
                 if (mapped.Id != null)
                 {

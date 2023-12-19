@@ -25,7 +25,6 @@ namespace LogicService.EO
         public string? Id_User { get; set; }
         public DateTime Executed_Time { get; set; }
         public string? Notes { get; set; }
-
         public DateTime? lastModified { get; set; }
     }
 }

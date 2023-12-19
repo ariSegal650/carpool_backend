@@ -3,4 +3,9 @@
 https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\ari65\Desktop\home\carpool_backend\api\backend\bin\Release\net7.0\publish\</_PublishTargetUrl>
+    <History>True|2023-12-18T10:58:11.7374652Z;False|2023-12-18T12:57:43.8707522+02:00;True|2023-12-18T12:34:16.3344726+02:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
 </Project>

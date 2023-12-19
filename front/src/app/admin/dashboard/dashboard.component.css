@@ -32,13 +32,13 @@
 .success p {
     background: #6ab96a;
     border-radius: 20px;
-    padding: 8px;
+    padding: 8px 15px;
     text-align: center;
 }
 
 .failure p {
     background: red;
     border-radius: 20px;
-    padding: 8px;
+    padding: 8px 15px;
     text-align: center;
 }

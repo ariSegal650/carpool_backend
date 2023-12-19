@@ -18,11 +18,11 @@ namespace LogicService.Dto
         public string? Phone_org { get; set; }
         public OrganizationDto? Organization { get; set; }
         public double Distance { get; set; }
+        public double DistanceMinutes { get; set; }
         public bool Executed { get; set; }
         public string? Id_User { get; set; }
         public DateTime? Executed_Time { get; set; }
         public string? Notes { get; set; }
-
         public DateTime? lastModified { get; set; }
     }
 

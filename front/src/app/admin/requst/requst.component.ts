@@ -135,14 +135,14 @@ export class RequstComponent implements OnInit {
     };
 
     const request: RequestAdmin = {
-      id:this.taskEdit?.id,
+      id: this.taskEdit?.id,
       name: this.requestForm.value.Name,
       phone: this.requestForm.value.Phone,
       type: this.requestForm.value.Type.name,
       count: this.requestForm.value.Count,
       carSize: this.requestForm.value.CarSize?.name,
       origin: this.originResult ?? this.taskEdit.origin,
-      destination: this.destinationResult ??this.taskEdit.destination,
+      destination: this.destinationResult ?? this.taskEdit.destination,
       date: this.requestForm.value.Date,
       dateEnd: this.requestForm.value.DateEnd,
       phone_org: this.requestForm.value.Phone_org,
@@ -151,20 +151,20 @@ export class RequstComponent implements OnInit {
     };
     this._messegeService.showLoading();
 
-    this.dataService.addReqqust(request).subscribe(
-      res => {
+    this.dataService.addReqqust(request).subscribe({
+
+      next: (value) => {
         this._messegeService.hideLoading();
         this.close();
         this._messegeService.showSuccess("הבקשה נוספה בהצלחה ");
         this.RequstSended.emit();
       },
-      err => {
+      error: (err) => {
         this._messegeService.hideLoading();
         this.close();
         this._messegeService.showError(err.error?.errorText);
-
-      }
-    )
+      },
+    })
   }
 
   close() {

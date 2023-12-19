@@ -31,6 +31,7 @@ export class DashboardComponent implements OnInit {
   deleteRequst(task: RequestAdmin) {
 
   }
+  
   editRequst(task: RequestAdmin) {
     this.taskEdit = task;
 

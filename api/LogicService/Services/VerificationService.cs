@@ -114,7 +114,7 @@ namespace LogicService.Services
                        return await _UserService.CreateUser(userinfo);
                     }
 
-                    var Exist = _UserService.CheckUserExist(requst.Phone);
+                    var Exist = await _UserService.CheckUserExist(requst.Phone);
                     if (!Exist)
                     {
                         return new OrgResponseDto(false, "הרשם תחילה");

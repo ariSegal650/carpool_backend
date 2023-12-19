@@ -37,9 +37,9 @@
                     <td>{{ task.phone }}</td>
                     <td>{{ task.date |date :'short'}}</td>
                     <td>{{ task.dateEnd |date :'short'}}</td>
-                    <td [ngClass]="{'success': task.executed, 'failure': (task.dateEnd |dateEnd) }">
+                    <td [ngClass]="{'success': task.executed, 'failure': !task.executed &&(task.dateEnd |dateEnd) }">
                         <p> {{ task.executed ? 'בוצע' : '' }}
-                            {{ (task.dateEnd |dateEnd) ? 'בוטל ' : '' }}</p>
+                            {{ !task.executed &&(task.dateEnd |dateEnd) ? 'בוטל ' : '' }}</p>
                     </td>
                     <td>{{task.organization.admin.name}}</td>
                     <td>{{ task.notes }}</td>

@@ -1,6 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { Observable, catchError, throwError } from 'rxjs';
 import { RequestAdmin } from 'src/app/admin/models/request';
 import { OrganizationInfoDto } from 'src/app/models/organization';
 
@@ -12,33 +13,45 @@ export class DataService {
 
   private baseUrl = " https://localhost:7012/api/"
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   getAllRequsr(): Observable<Array<RequestAdmin>> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
-    return this.http.get<Array<RequestAdmin>>(this.baseUrl + "Requst", { headers });
+    return this.http.get<Array<RequestAdmin>>(this.baseUrl + 'Requst', { headers });
+
+
   }
 
-  addReqqust(requestAdmin:RequestAdmin): Observable<any> {
+  addReqqust(requestAdmin: RequestAdmin): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
-    return this.http.post<any>(this.baseUrl + "Requst",requestAdmin, { headers });
+    return this.http.post<any>(this.baseUrl + "Requst", requestAdmin, { headers })
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            this.router.navigate(['/login']);
+            console.log(error.status);
+          }
+
+          return throwError(error);
+        })
+      );
   }
 
-  getOrganization(){
+  getOrganization() {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
     return this.http.get<OrganizationInfoDto>(this.baseUrl + "Organization", { headers });
   }
-  
-  updateOrganization(org:OrganizationInfoDto ){
+
+  updateOrganization(org: OrganizationInfoDto) {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
-    return this.http.put<OrganizationInfoDto>(this.baseUrl + "Organization",org, { headers });
+    return this.http.put<OrganizationInfoDto>(this.baseUrl + "Organization", org, { headers });
   }
 }
