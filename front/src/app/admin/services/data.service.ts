@@ -11,7 +11,7 @@ import { OrganizationInfoDto } from 'src/app/models/organization';
 })
 export class DataService {
 
-  private baseUrl = " https://localhost:7012/api/"
+  private baseUrl = "/api/"
 
   constructor(private http: HttpClient, private router: Router) { }
 

@@ -19,11 +19,12 @@ namespace LogicService.EO
         public DateTime Date { get; set; }
         public DateTime? DateEnd { get; set; }
         public string? Phone_org { get; set; }
-        //  public OrganizationAdminDto? Admin { get; set; }
         public OrganizationDto? Organization { get; set; }
         public bool Executed { get; set; } = false;
-        public string? Id_User { get; set; }
         public DateTime Executed_Time { get; set; }
+        public string? Status { get; set; }
+        public UserInfoEO? User { get; set; }
+        //public string? Id_User { get; set; }
         public string? Notes { get; set; }
         public DateTime? lastModified { get; set; }
     }

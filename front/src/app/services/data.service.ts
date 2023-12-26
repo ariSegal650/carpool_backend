@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class DataService {
 
-  private baseUrl = "https://carpool2.fly.dev/api/"
+  private baseUrl = "/api/"
   constructor(private http: HttpClient) { }
 
   CreateNewOrganization(org: OrganizationInfoDto): Observable<any> {

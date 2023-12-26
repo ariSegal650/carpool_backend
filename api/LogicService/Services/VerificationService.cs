@@ -104,8 +104,7 @@ namespace LogicService.Services
                 var verificationCheck = VerificationCheckResource.Create(
                 to: requst.Phone,
                 code: requst.Code,
-                pathServiceSid: _configuration["_pathServiceSid"]
-                 );
+                pathServiceSid: _configuration["_pathServiceSid"]);
 
                 if (verificationCheck.Status == "approved")
                 {

@@ -1,9 +1,7 @@
 ﻿using LogicService.Dto;
-using LogicService.EO;
 using LogicService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 
 namespace backend.Controllers
 {
@@ -17,19 +15,19 @@ namespace backend.Controllers
             _userService = user;
         }
 
-        [HttpGet]
-        public IActionResult Get([FromQuery] string id)
-        {
-            Console.WriteLine(id);
-            return Ok(_userService.GetUser(id));
-        }
+        // [HttpGet]
+        // public IActionResult Get([FromQuery] string id)
+        // {
+        //     Console.WriteLine(id);
+        //     return Ok(_userService.GetUserAsync(id));
+        // }
 
 
         [HttpPost("tasks")]
         [Authorize(Roles = "user")]
         public async Task<IActionResult> test([FromBody] UserLatLng coord)
         {
-           var response=await _userService.GetDistanceAsync(coord);
+            var response = await _userService.GetDistanceAsync(coord);
 
             return Ok(response);
         }
@@ -40,7 +38,7 @@ namespace backend.Controllers
         {
             var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
-            var response = await _userService.CanExecuteTask(jwt,task);
+            var response = await _userService.CanExecuteTask(jwt, task);
 
             if (response.sucsses)
                 return Ok(response);
@@ -50,5 +48,5 @@ namespace backend.Controllers
     }
 
 }
-  
+
 

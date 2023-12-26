@@ -2,10 +2,10 @@
 using LogicService.Data;
 using LogicService.Dto;
 using LogicService.EO;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http;
 
 namespace LogicService.Services
 {
@@ -39,13 +39,15 @@ namespace LogicService.Services
             }
         }
 
-        public UserInfoEO? GetUser(string phone)
+        public async Task<UserInfoEO?> GetUserAsync(string? phone)
         {
+            if (phone == null) return null;
+
             FilterDefinition<UserInfoEO> filter = Builders<UserInfoEO>.Filter.Eq("Phone", phone);
             try
             {
-                var user = _DataContexst._Users.Find(filter).FirstOrDefault();
-                return user;
+                var user = await _DataContexst._Users.Find(filter).FirstOrDefaultAsync();
+                return user != null ? user : null;
             }
             catch (Exception)
             {
@@ -70,20 +72,22 @@ namespace LogicService.Services
 
         }
 
+
         public async Task<SimpelResponse> CanExecuteTask(string jwt, RequstDto task)
         {
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(jwt) as JwtSecurityToken;
             var phone = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "MobilePhone")?.Value;
 
-            var userExists = await CheckUserExist(phone);
+            var userExists = await GetUserAsync(phone);
 
-            if (!userExists)
+            if (userExists == null)
             {
                 return new SimpelResponse(false, "הלקוח לא נמצא");
             }
 
             var filter = Builders<Request>.Filter.Eq(r => r.Id, task.Id);
+
             var existingTask = await _DataContexst._requsts.Find(filter).FirstOrDefaultAsync();
 
             if (existingTask == null || existingTask.Executed || existingTask.lastModified != task.lastModified)
@@ -91,11 +95,19 @@ namespace LogicService.Services
                 return new SimpelResponse(false, "המשימה נלקחה");
             }
 
-            existingTask.Id_User = task.Id_User;
-            existingTask.Executed = true;
-            existingTask.Executed_Time = DateTime.Now;
+            // existingTask.Id_User = task.Id_User;
+            // existingTask.Executed = true;
+            // existingTask.Executed_Time = DateTime.Now;
 
-            await _DataContexst._requsts.ReplaceOneAsync(filter, existingTask);
+            // await _DataContexst._requsts.ReplaceOneAsync(filter, existingTask);
+            //{ title: "Post Title 1" }, { $set: { likes: 2 } }
+
+            var update = Builders<Request>.Update.Set("User", userExists)
+            .Set("Executed", true)
+            .Set("Executed_Time", DateTime.Now);
+
+
+           await _DataContexst._requsts.UpdateOneAsync(filter, update);
 
             return new SimpelResponse(true, "קיבלת את המשימה");
         }
@@ -125,8 +137,6 @@ namespace LogicService.Services
                     Mappditem.Distance = distance;
                     sortedList.Add(Mappditem);
 
-                   Mappditem.DistanceMinutes= await RealTimeTraffic(coord, Mappditem) ?? 0;
-
                     // Keep the list sorted by distance in ascending order
                     sortedList = sortedList.OrderBy(r => r.Distance).ToList();
 
@@ -137,6 +147,13 @@ namespace LogicService.Services
                     }
 
                 }
+            }
+
+            //sort by time 
+            foreach (var item in sortedList)
+            {
+                item.DistanceMinutes = await RealTimeTraffic(coord, item) ?? 0;
+
             }
 
             sortedList = sortedList.OrderBy(r => r.DistanceMinutes).ToList();
@@ -168,7 +185,7 @@ namespace LogicService.Services
             }
             catch (Exception)
             {
-               
+
             }
             return null;
         }

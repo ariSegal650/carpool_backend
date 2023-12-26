@@ -11,13 +11,13 @@ namespace LogicService.EO
         public string? Nickname { get; set; }
         public string Phone { get; set; } = string.Empty;
         public string? Image { get; set; }
-        public Car? car { get; set; }
+        public Car? Car { get; set; }
     }
     public class Car
     {
         public int? Year { get; set; }
         public string? TypeCar { get; set; }
-        public string? seats { get; set; }
+        public string? Seats { get; set; }
         public string? TrunkSize {get; set;}
         public string? Image { get; set; }
     }
