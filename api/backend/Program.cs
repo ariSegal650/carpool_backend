@@ -11,7 +11,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-// builder.Services.AddControllersWithViews();
 // Add CORS
 builder.Services.AddCors();
 

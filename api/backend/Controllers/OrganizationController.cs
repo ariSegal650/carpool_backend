@@ -1,10 +1,8 @@
 ﻿
 using LogicService.Dto;
-using LogicService.EO;
 using LogicService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace backend.Controllers
 {
