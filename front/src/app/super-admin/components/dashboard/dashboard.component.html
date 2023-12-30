@@ -1,0 +1,37 @@
+<div class="card">
+    <p-table  [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+            <tr>
+               <th *ngFor="let item of listTitles">{{item}}</th>
+            </tr> 
+        </ng-template>
+        <ng-template pTemplate="body" let-task>
+            <tr>
+                <td>
+                    <div>
+                        <!-- <a (click)="editRequst(task)">
+                            <p>עריכה</p>
+                        </a> -->
+                        <!-- <a (click)="deleteRequst(task)"><p>מחיקה</p></a> -->
+                    </div>
+                </td>
+                <td>{{ task.origin.name }}</td>
+                <td>{{ task.destination.name }}</td>
+                <td>{{ task.type }}</td>
+                <td>{{ task.name }}</td>
+                <td>{{ task.phone }}</td>
+                <!-- <td>{{ task.date |date :'short'}}</td>
+                <td>{{ task.dateEnd |date :'short'}}</td> -->
+                <!-- <td [ngClass]="{'success': task.executed, 'failure': !task.executed &&(task.dateEnd |dateEnd) }">
+                    <p> {{ task.executed ? 'בוצע' : '' }}
+                        {{ !task.executed &&(task.dateEnd |dateEnd) ? 'בוטל ' : '' }}</p>
+                </td> -->
+                <td>
+                    {{task.status}}
+                </td>
+                <td>{{task.organization.admin.name}}</td>
+                <td>{{ task.notes }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

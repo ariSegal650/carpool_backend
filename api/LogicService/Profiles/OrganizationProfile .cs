@@ -2,7 +2,6 @@
 using AutoMapper;
 using LogicService.Dto;
 using LogicService.EO;
-using ZstdSharp.Unsafe;
 
 namespace LogicService.Profiles
 {

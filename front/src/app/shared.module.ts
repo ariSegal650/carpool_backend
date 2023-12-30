@@ -6,11 +6,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { HttpClientModule } from '@angular/common/http';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 
 @NgModule({
+  declarations: [   
+  ],
   exports: [
     ReactiveFormsModule,
     CardModule,
@@ -21,6 +22,7 @@ import { ButtonModule } from 'primeng/button';
     ToastModule,
     FormsModule,
     ButtonModule,
+    
 ],
   providers: []
 })

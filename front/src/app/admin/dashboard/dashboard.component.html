@@ -8,25 +8,16 @@
         <p-table [value]="tasks" [tableStyle]="{ 'min-width': '50rem' }">
             <ng-template pTemplate="header">
                 <tr>
-                    <th></th>
-                    <th>מוצא</th>
-                    <th>יעד</th>
-                    <th>סוג</th>
-                    <th>שם לקוח</th>
-                    <th>פלאפון</th>
-                    <th>תאריך</th>
-                    <th>תאריך לא רלוונטי</th>
-                    <th>סטטוס</th>
-                    <th>מנהל אחראי</th>
-                    <th>הערות</th>
-
-                </tr>
+                   <th *ngFor="let item of listTitles">{{item}}</th>
+                </tr> 
             </ng-template>
             <ng-template pTemplate="body" let-task>
                 <tr>
                     <td>
                         <div>
-                            <a (click)="editRequst(task)"><p>עריכה</p></a>
+                            <a (click)="editRequst(task)">
+                                <p>עריכה</p>
+                            </a>
                             <!-- <a (click)="deleteRequst(task)"><p>מחיקה</p></a> -->
                         </div>
                     </td>
@@ -37,9 +28,12 @@
                     <td>{{ task.phone }}</td>
                     <td>{{ task.date |date :'short'}}</td>
                     <td>{{ task.dateEnd |date :'short'}}</td>
-                    <td [ngClass]="{'success': task.executed, 'failure': !task.executed &&(task.dateEnd |dateEnd) }">
+                    <!-- <td [ngClass]="{'success': task.executed, 'failure': !task.executed &&(task.dateEnd |dateEnd) }">
                         <p> {{ task.executed ? 'בוצע' : '' }}
                             {{ !task.executed &&(task.dateEnd |dateEnd) ? 'בוטל ' : '' }}</p>
+                    </td> -->
+                    <td>
+                        {{task.status}}
                     </td>
                     <td>{{task.organization.admin.name}}</td>
                     <td>{{ task.notes }}</td>
@@ -49,6 +43,7 @@
     </div>
 
     <div class="add_task_component" *ngIf="showRequstComponent">
-        <app-requst [running_over]="true" [taskEdit]="taskEdit" (onClose)="addTask()" (RequstSended)="ReloadTheRequests()"></app-requst>
+        <app-requst [running_over]="true" [taskEdit]="taskEdit" (onClose)="addTask()"
+            (RequstSended)="ReloadTheRequests()"></app-requst>
     </div>
 </div>

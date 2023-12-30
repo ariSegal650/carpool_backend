@@ -17,12 +17,12 @@ namespace LogicService.Dto
         public DateTime? DateEnd { get; set; }
         public string? Phone_org { get; set; }
         public OrganizationDto? Organization { get; set; }
-        public double Distance { get; set; }
-        public double DistanceMinutes { get; set; }
         public bool Executed { get; set; }
         public DateTime? Executed_Time { get; set; }
+        public double Distance { get; set; }
+        public double DistanceMinutes { get; set; }
         public string? Status { get; set; }
-        public UserInfoEO? User { get; set; }
+        public userSignInDto? User { get; set; }
         public string? Notes { get; set; }
         public DateTime? lastModified { get; set; } 
     }

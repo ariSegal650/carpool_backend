@@ -15,23 +15,25 @@ export class DashboardComponent implements OnInit {
   showRequstComponent: boolean = false;
   taskEdit: RequestAdmin = null;
   @ViewChild('addresstext') addresstext: any;
-
+  listTitles: string[];
   constructor(private _dataservice: DataService,
     private _messegeService: MessageServiceClient) { }
 
   ngOnInit(): void {
     this.ReloadTheRequests();
+    this.listTitles = [
+      '', 'מוצא', 'יעד', 'סוג', 'שם לקוח', 'פלאפון', 'תאריך', 'תאריך לא רלוונטי', 'סטטוס', 'מנהל אחראי', 'הערות']
   }
 
   addTask() {
-    this.taskEdit=null;
+    this.taskEdit = null;
     this.showRequstComponent = !this.showRequstComponent;
   }
 
   deleteRequst(task: RequestAdmin) {
 
   }
-  
+
   editRequst(task: RequestAdmin) {
     this.taskEdit = task;
 

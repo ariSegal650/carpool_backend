@@ -23,8 +23,7 @@ namespace LogicService.EO
         public bool Executed { get; set; } = false;
         public DateTime Executed_Time { get; set; }
         public string? Status { get; set; }
-        public UserInfoEO? User { get; set; }
-        //public string? Id_User { get; set; }
+        public userSignInDto? User { get; set; }
         public string? Notes { get; set; }
         public DateTime? lastModified { get; set; }
     }

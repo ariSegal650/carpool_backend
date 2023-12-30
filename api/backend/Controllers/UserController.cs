@@ -1,4 +1,5 @@
 ﻿using LogicService.Dto;
+using LogicService.EO;
 using LogicService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,17 +16,32 @@ namespace backend.Controllers
             _userService = user;
         }
 
-        // [HttpGet]
-        // public IActionResult Get([FromQuery] string id)
-        // {
-        //     Console.WriteLine(id);
-        //     return Ok(_userService.GetUserAsync(id));
-        // }
+        [HttpGet]
+        [Authorize(Roles = "user")]
+        public async Task<IActionResult> Get()
+        {
+            var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var user = await _userService.GetUserDto(jwt);
+
+            return user != null ? Ok(user) : BadRequest();
+        }
+
+        [HttpPut]
+        [Authorize(Roles = "user")]
+        public async Task<IActionResult> UpdateParameters(UserInfoEO user)
+        {
+            var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var response = await _userService.UpdateParameters(user, jwt);
+
+            return response.sucsses ? Ok(response) : BadRequest(response);
+        }
 
 
         [HttpPost("tasks")]
-        [Authorize(Roles = "user")]
-        public async Task<IActionResult> test([FromBody] UserLatLng coord)
+       // [Authorize(Roles = "user")]
+        public async Task<IActionResult> GetListOfTasks([FromBody] UserLatLng coord)
         {
             var response = await _userService.GetDistanceAsync(coord);
 
@@ -41,6 +57,19 @@ namespace backend.Controllers
             var response = await _userService.CanExecuteTask(jwt, task);
 
             if (response.sucsses)
+                return Ok(response);
+            return BadRequest(response);
+        }
+
+        [HttpGet("history")]
+        [Authorize(Roles = "user")]
+        public async Task<IActionResult> GetTasksHistory()
+        {
+            var jwt = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var response = await _userService.GetTasksHistory(jwt);
+
+            if (response != null)
                 return Ok(response);
             return BadRequest(response);
         }

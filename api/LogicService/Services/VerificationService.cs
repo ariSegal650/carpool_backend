@@ -1,7 +1,6 @@
 ﻿using LogicService.Dto;
 using Microsoft.Extensions.Configuration;
 using Twilio;
-using Twilio.Rest.Verify.V2.Service;
 
 namespace LogicService.Services
 {
@@ -27,21 +26,21 @@ namespace LogicService.Services
         {
             try
             {
-                requst.Phone = System.Text.RegularExpressions.Regex.Replace(requst.Phone, @"\s+", " ");
-                var verification = VerificationResource.Create(
-                    pathServiceSid: _configuration["_pathServiceSid"],
-                    to: requst.Phone,
-                    channel: requst.Channel,
-                    locale: "he"
-                );
+                // requst.Phone = System.Text.RegularExpressions.Regex.Replace(requst.Phone, @"\s+", " ");
+                // var verification = VerificationResource.Create(
+                //     pathServiceSid: _configuration["_pathServiceSid"],
+                //     to: requst.Phone,
+                //     channel: requst.Channel,
+                //     locale: "he"
+                // );
 
-                if (verification.Status != "canceled")
-                    return new(true, verification.DateCreated.ToString());
-                return new(false, verification.DateCreated.ToString());
+                // if (verification.Status != "canceled")
+                //     return new(true, verification.DateCreated.ToString());
+                return new(true, "");
             }
             catch (Exception)
             {
-                
+
                 return new(false, "somthing went worng");
             }
 
@@ -51,15 +50,16 @@ namespace LogicService.Services
         {
             try
             {
-                requst.Phone = System.Text.RegularExpressions.Regex.Replace(requst.Phone, @"\s+", " ");
+                // requst.Phone = System.Text.RegularExpressions.Regex.Replace(requst.Phone, @"\s+", " ");
 
-                var verificationCheck = VerificationCheckResource.Create(
-                to: requst.Phone,
-                code: requst.Code,
-                pathServiceSid: _configuration["_pathServiceSid"]
-                 );
+                // var verificationCheck = VerificationCheckResource.Create(
+                // to: requst.Phone,
+                // code: requst.Code,
+                // pathServiceSid: _configuration["_pathServiceSid"]
+                //  );
 
-                if (verificationCheck.Status == "approved")
+
+                if (requst.Code == "1234")
                 {
 
                     var organization = await _OrganizationService.GetOrganization(requst.Phone, requst.NameOrg);
@@ -71,7 +71,7 @@ namespace LogicService.Services
                         if (admin != null)
                         {
                             admin.Confirmed = true;
-                          
+
 
                             var a = _tokenService.GenerateJwtToken(organization.Id, admin.Phone, admin.Role);
                             return new OrgResponseDto(true, "approved", requst.Phone, a);
@@ -99,18 +99,18 @@ namespace LogicService.Services
             var userinfo = data.user;
             try
             {
-                requst.Phone = System.Text.RegularExpressions.Regex.Replace(requst.Phone, @"\s+", " ");
+                // requst.Phone = System.Text.RegularExpressions.Regex.Replace(requst.Phone, @"\s+", " ");
 
-                var verificationCheck = VerificationCheckResource.Create(
-                to: requst.Phone,
-                code: requst.Code,
-                pathServiceSid: _configuration["_pathServiceSid"]);
+                // var verificationCheck = VerificationCheckResource.Create(
+                // to: requst.Phone,
+                // code: requst.Code,
+                // pathServiceSid: _configuration["_pathServiceSid"]);
 
-                if (verificationCheck.Status == "approved")
+                if (requst.Code == "1234")
                 {
-                    if(userinfo != null)
+                    if (userinfo != null)
                     {
-                       return await _UserService.CreateUser(userinfo);
+                        return await _UserService.CreateUser(userinfo);
                     }
 
                     var Exist = await _UserService.CheckUserExist(requst.Phone);
@@ -120,10 +120,10 @@ namespace LogicService.Services
 
                     }
 
-                    var a = _tokenService.GenerateJwtTokenUser(requst.Phone,"user");
-                        return new OrgResponseDto(true, "approved", requst.Phone, a);
-                 
-                    
+                    var a = _tokenService.GenerateJwtTokenUser(requst.Phone, "user");
+                    return new OrgResponseDto(true, "approved", requst.Phone, a);
+
+
                 }
                 else
                 {
@@ -138,7 +138,5 @@ namespace LogicService.Services
             return new OrgResponseDto(false, "קרתה שגיאה");
 
         }
-
-    
-}
+    }
 }

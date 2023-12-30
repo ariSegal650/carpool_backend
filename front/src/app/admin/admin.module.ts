@@ -14,6 +14,7 @@ import { AsideComponent } from './aside/aside.component';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { OrganizationProfileComponent } from './organization-profile/organization-profile.component';
 
+
 const adminRoutes: Routes = [
 
   {

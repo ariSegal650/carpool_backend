@@ -25,10 +25,6 @@ namespace LogicService.Data
                 // Create a new client and connect to the server
                 var client = new MongoClient(settings);
 
-
-                // MongoClient client = new MongoClient("mongodb://localhost:27017");
-
-                // MongoClient client = new MongoClient("mongodb://mongodb:27017");
                 Console.WriteLine("Connected to MongoDB1!");
 
                 IMongoDatabase database = client.GetDatabase("carpool");

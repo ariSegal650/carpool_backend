@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input,  OnInit, Output, } from '@angular/core';
 import { Router } from '@angular/router';
 import { Login, VerificationDto } from 'src/app/models/Verification';
 import { MessageServiceClient } from 'src/app/services/message-service-client.service';

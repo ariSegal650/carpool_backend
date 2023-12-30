@@ -2,7 +2,6 @@
 using LogicService.Data;
 using LogicService.Dto;
 using LogicService.EO;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
@@ -30,6 +29,7 @@ namespace LogicService.Services
             {
                 var userMapped = _mapper.Map<UserInfoEO>(user);
                 await _DataContexst._Users.InsertOneAsync(userMapped);
+
                 return new(true, "user created", "", _tokenService.GenerateJwtTokenUser(user.Phone, "user"));
             }
             catch (Exception e)
@@ -39,19 +39,58 @@ namespace LogicService.Services
             }
         }
 
-        public async Task<UserInfoEO?> GetUserAsync(string? phone)
+        public async Task<UserInfoEO?> GetUser(string? jwt)
         {
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(jwt) as JwtSecurityToken;
+            var phone = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "MobilePhone")?.Value;
             if (phone == null) return null;
 
             FilterDefinition<UserInfoEO> filter = Builders<UserInfoEO>.Filter.Eq("Phone", phone);
             try
             {
                 var user = await _DataContexst._Users.Find(filter).FirstOrDefaultAsync();
-                return user != null ? user : null;
+                if (user == null) return null;
+                return user;
             }
             catch (Exception)
             {
                 return null;
+            }
+        }
+        public async Task<userSignInDto?> GetUserDto(string? jwt)
+        {
+            var user = await GetUser(jwt);
+            if (user == null) return null;
+            var userMapped = _mapper.Map<userSignInDto>(user);
+            return userMapped;
+        }
+
+        public async Task<OrgResponseDto> UpdateParameters(UserInfoEO user, string? jwt)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(jwt) as JwtSecurityToken;
+            var phone = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "MobilePhone")?.Value;
+            if (phone == null) return new(false, "שגיאה");
+
+            try
+            {
+                if (!await CheckUserExist(user.Phone)) return new(false, "משתמש לא קיים");
+
+                FilterDefinition<UserInfoEO> filter = Builders<UserInfoEO>.Filter.Eq("Phone", phone);
+                var update = Builders<UserInfoEO>.Update.Set("Nickname", user.Nickname)
+                           .Set(x => x.Car!.Year, user?.Car?.Year)
+                           .Set(x => x.Car!.TypeCar, user?.Car?.TypeCar)
+                           .Set(x => x.Car!.Seats, user?.Car?.Seats)
+                           .Set(x => x.Car!.TrunkSize, user?.Car?.TrunkSize);
+
+                await _DataContexst._Users.UpdateOneAsync(filter, update);
+
+                return new(true, "עודכן בהצלחה");
+            }
+            catch (Exception)
+            {
+                return new(false, "שגיאה");
             }
         }
 
@@ -69,19 +108,13 @@ namespace LogicService.Services
             {
                 return false;
             }
-
         }
 
 
         public async Task<SimpelResponse> CanExecuteTask(string jwt, RequstDto task)
         {
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(jwt) as JwtSecurityToken;
-            var phone = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == "MobilePhone")?.Value;
-
-            var userExists = await GetUserAsync(phone);
-
-            if (userExists == null)
+            var user = await GetUserDto(jwt);
+            if (user == null)
             {
                 return new SimpelResponse(false, "הלקוח לא נמצא");
             }
@@ -95,23 +128,30 @@ namespace LogicService.Services
                 return new SimpelResponse(false, "המשימה נלקחה");
             }
 
-            // existingTask.Id_User = task.Id_User;
-            // existingTask.Executed = true;
-            // existingTask.Executed_Time = DateTime.Now;
-
-            // await _DataContexst._requsts.ReplaceOneAsync(filter, existingTask);
-            //{ title: "Post Title 1" }, { $set: { likes: 2 } }
-
-            var update = Builders<Request>.Update.Set("User", userExists)
+            var update = Builders<Request>.Update.Set("User", user)
             .Set("Executed", true)
-            .Set("Executed_Time", DateTime.Now);
+            .Set("Executed_Time", DateTime.Now)
+            .Set("Status", "בביצוע");
+            await _DataContexst._requsts.UpdateOneAsync(filter, update);
 
-
-           await _DataContexst._requsts.UpdateOneAsync(filter, update);
-
+            await AddTask(user, task);
             return new SimpelResponse(true, "קיבלת את המשימה");
         }
 
+        public async Task AddTask(userSignInDto user, RequstDto task)
+        {
+            var filter = Builders<UserInfoEO>.Filter.Eq(u => u.Phone, user.Phone);
+            var update = Builders<UserInfoEO>.Update.Push(u => u.Tasks, task);
+
+            var result = await _DataContexst._Users.UpdateOneAsync(filter, update);
+        }
+
+        public async Task<List<RequstDto>?> GetTasksHistory(string? jwt)
+        {
+            var user = await GetUser(jwt);
+            if (user == null) return null;
+            return user.Tasks;
+        }
 
         public async Task<List<RequstDto>> GetDistanceAsync(UserLatLng coord)
         {
